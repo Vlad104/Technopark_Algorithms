@@ -6,24 +6,18 @@ int task(std::vector<int> series_1, std::vector<int> series_2, int k) {
 	int len1 = series_1.size();
 	int len2 = series_2.size();
 
-	size_t i = 0, j = len2 - 1, count = 0;
+	size_t i = 0, j = 0, count = 0;
 	int diff_1 = 0, diff_2 = 0;
-	int n = 0;
-	while (n < len1 + len2) {
-		if ( series_1[i] + series_2[j] == k ) {
-			count++;
+	while (i + j < len1 + len2) {
+		if ( series_1[i] == series_2[j]) {
 			i++;
-			j--;
-		} else if (series_1[i] + series_2[j] < k) {
-			if (i < len1) {
-				i++;				
-			}
-		} else {
-			if (j > 0) {
-				j--;				
-			}
+			j++;
+		} else if ( series_1[i] < series_2[j]) {
+			i++;
+		} else{
+			j++;
 		}
-		n++;
+
 	}
 
 	return count;
@@ -43,7 +37,7 @@ int main() {
 	for (size_t j = 0; j < len2; j++) {
 		std::cin >> series_2[j];
 	}
-
+	
 	int k;
 	std::cin >> k;
 
