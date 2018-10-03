@@ -1,21 +1,37 @@
 #include <iostream>
 #include <vector>
 
-std::vector<int> task(std::vector<int> series_1, std::vector<int> series_2) {
+std::vector<int> setsUnion(std::vector<int> series_1, std::vector<int> series_2) {
 
-	int len1 = series_1.size();
-	int len2 = series_2.size();
+	size_t len1 = series_1.size();
+	size_t len2 = series_2.size();
 	std::vector<int> series_3;
-	size_t i = 0, j = 0, count = 0;
-	while (i + j < len1 + len2) {
+	size_t i = 0, j = 0, k = 0;;
+	while (k < len1 + len2) {
+		k++;
 		if ( series_1[i] == series_2[j]) {
 			series_3.push_back(series_1[i]);
-			i++;
-			j++;
+			if ( i < len1 - 1 ) {
+				i++;
+			} 
+			if ( j < len2 - 1 ) {
+				j++;
+			} 
+			if ( (i == len1 - 1) && (j == len2 - 1) ) {
+				break;
+			}
 		} else if ( series_1[i] < series_2[j]) {
-			i++;
+			if ( i < len1 - 1 ) {
+				i++;
+			} else {
+				break;
+			}
 		} else {
-			j++;
+			if ( j < len2 - 1 ) {
+				j++;
+			} else {
+				break;
+			}
 		}
 
 	}
@@ -36,7 +52,7 @@ int main() {
 		std::cin >> series_2[j];
 	}	
 
-	std::vector<int> series_3 = task(std::move(series_1), std::move(series_2));
+	std::vector<int> series_3 = setsUnion(std::move(series_1), std::move(series_2));
 	for ( auto element : series_3) {
 		std::cout << element << " ";
 	}
