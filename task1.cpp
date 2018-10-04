@@ -11,6 +11,11 @@ long sumsEqualsTo(std::vector<int> series_1, std::vector<int> series_2, long k) 
 	while ( n < len1 + len2 ) {
 		if ( series_1[i] + series_2[j] == k ) {
 			count++;
+
+			if ((i == len1 - 1) && (j == 0)) {
+				break;
+			}
+			
 			if (i < len1 - 1) {
 				i++;
 			}
@@ -20,12 +25,17 @@ long sumsEqualsTo(std::vector<int> series_1, std::vector<int> series_2, long k) 
 		} else if (series_1[i] + series_2[j] < k) {
 			if (i < len1 - 1) {
 				i++;				
+			} else if (j > 0) {
+				j--;
 			}
 		} else {
 			if (j > 0) {
 				j--;				
+			} else if (i < len1 - 1) {
+				i++;
 			}
 		}
+
 		n++;
 	}
 
