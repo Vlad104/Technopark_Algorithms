@@ -29,7 +29,7 @@ std::vector<int> setsUnion(std::vector<int> series_1, std::vector<int> series_2)
 	size_t len2 = series_2.size();
 	std::vector<int> series_3; // пересечение множеств
 	size_t i = 0, j = 0;
-	step_counter = 0;
+	size_t step_counter = 0;
 	
 	// обход массивов
 	while (step_counter < len1 + len2) {

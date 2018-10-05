@@ -39,7 +39,7 @@ long sumsEqualsTo(std::vector<int> series_1, std::vector<int> series_2, long k) 
 	long len2 = series_2.size();
 
 	long count = 0;
-	long i = 0, j = len2 - 1,;
+	long i = 0, j = len2 - 1;
 	long step_counter = 0;
 	
 	// обход массивов, причем, первый оходится слева направо, а второй - справа на лево
