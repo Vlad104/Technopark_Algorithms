@@ -23,7 +23,7 @@
 3
 
 
-ID Решения: 12347130
+ID Решения: 12399067
 **/
 
 /**
@@ -33,13 +33,8 @@ ID Решения: 12347130
 
 
 #include <iostream>
-#include <vector>
 
-long sumsEqualsTo(std::vector<int> series_1, std::vector<int> series_2, long k) {
-
-	long len1 = series_1.size();
-	long len2 = series_2.size();
-
+long sumsEqualsTo(const int * series_1, const int * series_2, long len1, long len2, long k) {
 	long count = 0;
 	long i = 0, j = len2 - 1;
 	long step_counter = 0;
@@ -83,7 +78,7 @@ int main() {
 	// заполнение первого массива
 	long len1;
 	std::cin >> len1;
-	std::vector<int> series_1(len1);
+	int * series_1 = new int[len1];
 	for (long i = 0; i < len1; i++) {
 		std::cin >> series_1[i];
 	}
@@ -91,7 +86,7 @@ int main() {
 	// заполнение второго массива
 	long len2;
 	std::cin >> len2;
-	std::vector<int> series_2(len2);
+	int * series_2 = new int[len2];
 	for (long j = 0; j < len2; j++) {
 		std::cin >> series_2[j];
 	}
@@ -99,7 +94,9 @@ int main() {
 	long k;
 	std::cin >> k;
 
-	std::cout << sumsEqualsTo(std::move(series_1), std::move(series_2), k) << std::endl;
+	std::cout << sumsEqualsTo( series_1, series_2, len1, len2, k) << std::endl;
+	delete[] series_1;
+	delete[] series_2;
 	return 0;
 
 }
