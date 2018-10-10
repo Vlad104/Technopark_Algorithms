@@ -192,6 +192,9 @@ int main() {
 			default :			
 				break;
 		}
+		//if (!isCorrect) {
+		//	break;
+		//}
 	}	
 	delete deck;
 	if (isCorrect) {
