@@ -1,19 +1,22 @@
 #include <iostream>
 
-class Heap {
+class MinHeap {
 public:
-	explicit Heap(int bufferSize);
-	~Heap() {delete[] buffer_;};
-	Heap(const Heap&) = delete;
-	Heap(Heap&) = delete;
-	Heap& operator=(const Heap&) = delete;
-	Heap& operator=(Heap&) = delete;
+	explicit MinHeap(int bufferSize);
+	~MinHeap() {delete[] buffer_;};
+	MinHeap(const MinHeap&) = delete;
+	MinHeap(MinHeap&) = delete;
+	MinHeap& operator=(const MinHeap&) = delete;
+	MinHeap& operator=(MinHeap&) = delete;
 
 	//void Add(const int& element);
 	void Add(int element);
 	int ExtractMax();
 	const int& GetMax() const;
 	void BuildHeap();
+	bool isEmpty() {return size_ <= 0;}
+	int  size() {return size_;}
+
 	
 
 private:
@@ -26,13 +29,13 @@ private:
 
 };
 
-Heap::Heap(int bufferSize) {
-	size_ = bufferSize;
+MinHeap::MinHeap(int bufferSize) {
+	size_ = 0;
 	bufferSize_ = bufferSize;
 	buffer_ = new int[bufferSize];
 }
 
-void Heap::AllocateNewMem() {
+void MinHeap::AllocateNewMem() {
 	int* temp = new int[bufferSize_*2];
 	for (int i = 0; i < bufferSize_; i++) {
 		temp[i] = buffer_[i];
@@ -42,34 +45,34 @@ void Heap::AllocateNewMem() {
 	bufferSize_ *= 2;
 }
 
-void Heap::BuildHeap() {
+void MinHeap::BuildHeap() {
 	for (int i = size_ / 2 - 1; i >= 0; i--) {
 		SiftDown(i);
 	}
 }
 
 // проталкивание элемента вниз
-void Heap::SiftDown(int elementNum) {
+void MinHeap::SiftDown(int elementNum) {
 	int left  = 2 * elementNum + 1;
 	int right = 2 * elementNum + 2;
-	int largest = elementNum;
+	int least = elementNum;
 
 	if (left < size_ && buffer_[left] < buffer_[elementNum]) {
-		largest = left;
+		least = left;
 	}
-	if (right < size_ && buffer_[right] < buffer_[elementNum]) {
-		largest = right;
+	if (right < size_ && buffer_[right] < buffer_[least]) {
+		least = right;
 	}
-	if (largest != elementNum) {
-		std::swap(buffer_[elementNum], buffer_[largest]);
-		SiftDown(largest);
+	if (least != elementNum) {
+		std::swap(buffer_[elementNum], buffer_[least]);
+		SiftDown(least);
 	}
 }
 
-void Heap::SiftUp(int elementNum) {
+void MinHeap::SiftUp(int elementNum) {
 	while (elementNum > 0) {
 		int parent = (elementNum - 1) / 2;
-		if (buffer_[elementNum] <= buffer_[parent]) {
+		if (buffer_[elementNum] >= buffer_[parent]) {
 			return;
 		}
 		std::swap(buffer_[elementNum], buffer_[parent]);
@@ -77,16 +80,17 @@ void Heap::SiftUp(int elementNum) {
 	}
 }
 
-void Heap::Add(int element) {
+void MinHeap::Add(int element) {
 	if (bufferSize_ <= size_) {
 		AllocateNewMem();
+		std::cout << "Alloc" << std::endl;
 	}
 	buffer_[size_] = element;
 	size_++;
 	SiftUp(size_ - 1);
 }
 
-int Heap::ExtractMax() {
+int MinHeap::ExtractMax() {
 	// if is not empty
 	int result = buffer_[0];
 	buffer_[0] = buffer_[size_ - 1];
@@ -101,18 +105,22 @@ int Heap::ExtractMax() {
 int main() {
 	int n;
 	std::cin >> n;
-	Heap* heap = new Heap(n);
+	MinHeap* heap = new MinHeap(n);
 	for (int i = 0; i < n; i++) {
 		int element;
 		std::cin >> element;
 		heap->Add(element);
 	}
 	int sum = 0;
-	std::cout << heap->ExtractMax() << std::endl;
-	std::cout << heap->ExtractMax() << std::endl;
-	std::cout << heap->ExtractMax() << std::endl;
-	std::cout << heap->ExtractMax() << std::endl;
-	std::cout << heap->ExtractMax() << std::endl;
+	while(heap->size() > 1) {
+		int element_1 = heap->ExtractMax();
+		int element_2 = heap->ExtractMax();
+		int temp_sum = element_1 + element_2;
+		heap->Add(temp_sum);
+		sum += temp_sum;
+	}
+
+	std::cout << sum << std::endl;
 
 	return 0;
 }
