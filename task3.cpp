@@ -50,7 +50,7 @@ NO
 
 class Deck {
 public:
-	Deck(int bufSize);
+	explicit Deck(int bufSize);
 	~Deck() {delete[] buf_;};
 	Deck(const Deck&) = delete;
 	Deck(Deck&) = delete;
@@ -61,24 +61,25 @@ public:
 	void pushBack(int const number);
 	int popFront();
 	int popBack();
-	int size();
+	long size();
 
 private:
+	void allocateNewMem();
 	void clearExtraMemory();
 	int* buf_;
-	int bufSize_;
-	int head_;
-	int tail_;
+	long bufSize_;
+	long head_;
+	long tail_;
 };
 
 Deck::Deck(int bufSize) {
 	bufSize_ = bufSize;
-	buf_ = new int(bufSize_);
+	buf_ = new int[bufSize_];
 	head_ = 0;
 	tail_ = 0;
 }
 
-int Deck::size() {
+long Deck::size() {
 	if (tail_ >= head_) {
 		return tail_ - head_;
 	}
@@ -87,47 +88,49 @@ int Deck::size() {
 	}
 }
 
+void Deck::allocateNewMem() {
+	int* newBuf = new int[bufSize_*2];
+	for (long i = 0; i < bufSize_; i++) {
+		newBuf[i] = buf_[head_];
+		head_ = (head_ + 1) % bufSize_;
+	}
+	delete[] buf_;
+	buf_ = newBuf;
+	head_ = 0;
+	tail_ = bufSize_;
+	bufSize_ *= 2;
+	return;
+}
+
 void Deck::pushFront(int const number) {
-	if (head_ == (tail_ + 1) % bufSize_) {
-		int * newBuf = new int[bufSize_*2];
-		for (size_t i = 0; i < bufSize_; i++) {
-			newBuf[i] = buf_[head_];
-			head_ = (head_ + 1) % bufSize_;
-		}
-		delete[] buf_;
-		buf_ = newBuf;
-		head_ = 0;
-		tail_ = bufSize_;
-		bufSize_ *= 2;
+	if ( (size() >= bufSize_ ) && ( head_ == (tail_ + 1) % bufSize_) ) {
+	//if ( (head_ - tail_ + bufSize_) % bufSize_ == 1) {
+		allocateNewMem();
+		//std::cout << "Alloc" << std::endl;
 	}
 	head_ = (head_ - 1 + bufSize_) % bufSize_;
+	//std::cout << "head " << head_ << std::endl;
 	buf_[head_] = number;
 	return;
 }
 
 void Deck::pushBack(int const number) {
-	if (head_ == (tail_ + 1) % bufSize_) {
-		int * newBuf = new int[bufSize_*2];
-		for (size_t i = 0; i < bufSize_; i++) {
-			newBuf[i] = buf_[head_];
-			head_ = (head_ + 1) % bufSize_;
-		}
-		delete[] buf_;
-		buf_ = newBuf;
-		head_ = 0;
-		tail_ = bufSize_;
-		bufSize_ *= 2;
+	if ( (size() >= bufSize_ ) && ( head_ == (tail_ + 1) % bufSize_) ) {
+	//if (head_ == (tail_ + 1) % bufSize_) {
+		allocateNewMem();
+		//std::cout << "Alloc" << std::endl;
 	}
 	buf_[tail_] = number;
+	//std::cout << "tail " << tail_ << std::endl;
 	tail_ = (tail_ + 1) % bufSize_;
 	return;
 }
 
 void Deck::clearExtraMemory() {
 	if (size() < bufSize_ / 4) {
-		int * newBuf = new int[bufSize_/2];
-		int newBufSize = size();
-		for (size_t i = 0; i < newBufSize; i++)	{
+		int* newBuf = new int[bufSize_/2];
+		long newBufSize = size();
+		for (long i = 0; i < newBufSize; i++)	{
 			newBuf[i] = buf_[head_];
 			head_ = (head_ + 1) % bufSize_;
 		}
@@ -137,11 +140,11 @@ void Deck::clearExtraMemory() {
 		tail_ = newBufSize;
 		bufSize_ /= 2;
 	}	
+	return;
 }
 
-int Deck::popFront(){
+int Deck::popFront() {
 	if (size() > 0) {
-		std::cout << size() << std::endl;
 		clearExtraMemory();
 		int popNumber = buf_[head_];
 		head_ = (head_ + 1) % bufSize_;
@@ -152,7 +155,7 @@ int Deck::popFront(){
 	}
 }
 
-int Deck::popBack(){
+int Deck::popBack() {
 	if (size() > 0) {
 		clearExtraMemory();
 		tail_ = (tail_ - 1 + bufSize_) % bufSize_;
@@ -165,12 +168,13 @@ int Deck::popBack(){
 }
 
 int main() {
-	int n;
+	long n;
 	std::cin >> n;
-	Deck * deck = new Deck(n);
+	Deck* deck = new Deck(n);
 	bool isCorrect = true;
-	for (int i = 0; i < n; i++) {
-		int command, number, temp = 0;
+	for (long i = 0; i < n; i++) {
+		int command = 0;
+		int number = 0;
 		std::cin >> command >> number;
 		switch (command) {
 			case 1:
@@ -192,16 +196,16 @@ int main() {
 			default :			
 				break;
 		}
-		//if (!isCorrect) {
-		//	break;
-		//}
+		if (!isCorrect) {
+			break;
+		}
 	}	
-	delete deck;
 	if (isCorrect) {
 		std::cout << "YES" << std::endl;
 	}
 	else {
 		std::cout << "NO" << std::endl;
 	}
+	delete deck;
 	return 0;
 }
