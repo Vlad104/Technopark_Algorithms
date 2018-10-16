@@ -104,24 +104,18 @@ void Deck::allocateNewMem() {
 
 void Deck::pushFront(int const number) {
 	if ( (size() >= bufSize_ ) && ( head_ == (tail_ + 1) % bufSize_) ) {
-	//if ( (head_ - tail_ + bufSize_) % bufSize_ == 1) {
 		allocateNewMem();
-		//std::cout << "Alloc" << std::endl;
 	}
 	head_ = (head_ - 1 + bufSize_) % bufSize_;
-	//std::cout << "head " << head_ << std::endl;
 	buf_[head_] = number;
 	return;
 }
 
 void Deck::pushBack(int const number) {
 	if ( (size() >= bufSize_ ) && ( head_ == (tail_ + 1) % bufSize_) ) {
-	//if (head_ == (tail_ + 1) % bufSize_) {
 		allocateNewMem();
-		//std::cout << "Alloc" << std::endl;
 	}
 	buf_[tail_] = number;
-	//std::cout << "tail " << tail_ << std::endl;
 	tail_ = (tail_ + 1) % bufSize_;
 	return;
 }
@@ -193,7 +187,8 @@ int main() {
 					isCorrect = false;
 				}			
 				break;
-			default :			
+			default :
+				isCorrect = false;		
 				break;
 		}
 		if (!isCorrect) {

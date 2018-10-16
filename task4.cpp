@@ -83,7 +83,6 @@ void MinHeap::SiftUp(int elementNum) {
 void MinHeap::Add(int element) {
 	if (bufferSize_ <= size_) {
 		AllocateNewMem();
-		std::cout << "Alloc" << std::endl;
 	}
 	buffer_[size_] = element;
 	size_++;
