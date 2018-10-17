@@ -75,7 +75,7 @@ void MinHeap::BuildHeap() {
 }
 
 // проталкивание элемента вниз
-void MinHeap::SiftDown(int elementNum) {
+void MinHeap::SiftDown(int elementNum) { // for MinHeap
 	int left  = 2 * elementNum + 1;
 	int right = 2 * elementNum + 2;
 	int least = elementNum;
@@ -92,7 +92,7 @@ void MinHeap::SiftDown(int elementNum) {
 	}
 }
 
-void MinHeap::SiftUp(int elementNum) {
+void MinHeap::SiftUp(int elementNum) { // for MinHeap
 	while (elementNum > 0) {
 		int parent = (elementNum - 1) / 2;
 		if (buffer_[elementNum] >= buffer_[parent]) {
