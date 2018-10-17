@@ -80,10 +80,12 @@ Deck::Deck(int bufSize = 1) {
 	tail_ = 0;
 }
 
+// возвращает колличество элементов в буффере
 long Deck::size() {
 	return (tail_ >= head_) ? tail_ - head_ : bufSize_ - head_ + tail_;
 }
 
+// выделение дополнительной памяти
 void Deck::allocateNewMem() {
 	int* newBuf = new int[bufSize_*2];
 	assert(newBuf != nullptr);
@@ -101,6 +103,7 @@ void Deck::allocateNewMem() {
 }
 
 /*
+// освобождение лишней памяти
 void Deck::clearExtraMemory() {
 	if (size() < bufSize_ / 4) {
 		int* newBuf = new int[bufSize_/2];
@@ -121,6 +124,7 @@ void Deck::clearExtraMemory() {
 }
 */
 
+// добавление элемента в начало дека
 void Deck::pushFront(int const number) {
 	if ( ( head_ == (tail_ + 1) % bufSize_) ) {
 		allocateNewMem();
@@ -130,6 +134,7 @@ void Deck::pushFront(int const number) {
 	return;
 }
 
+// добавление элемента в конец дека
 void Deck::pushBack(int const number) {
 	if ( ( head_ == (tail_ + 1) % bufSize_) ) {
 		allocateNewMem();
@@ -139,6 +144,7 @@ void Deck::pushBack(int const number) {
 	return;
 }
 
+// извлечение элемента из начала дека
 int Deck::popFront() {
 	if (size() > 0) {
 		//clearExtraMemory();
@@ -151,6 +157,7 @@ int Deck::popFront() {
 	}
 }
 
+// извлечение элемента с конца дека
 int Deck::popBack() {
 	if (size() > 0) {
 		//clearExtraMemory();
@@ -164,10 +171,10 @@ int Deck::popBack() {
 }
 
 int main() {
-	long n;
+	long n = 0;
 	std::cin >> n;
 	Deck* deck = new Deck();
-	bool isCorrect = true;
+	bool isCorrect = true; // флаг корректной работы с деком
 	for (long i = 0; i < n; i++) {
 		int command = 0;
 		int number = 0;

@@ -23,6 +23,7 @@ out
 #include <iostream>
 #include <cassert>
 
+// мин. куча - родитель меньше своих детей
 class MinHeap {
 public:
 	explicit MinHeap(int bufferSize);
@@ -34,7 +35,7 @@ public:
 
 	//void Add(const int& element);
 	void Add(int element);
-	int ExtractMax();
+	int ExtractMin();
 	const int& GetMax() const;
 	void BuildHeap();
 	bool isEmpty() {return size_ <= 0;}
@@ -92,6 +93,7 @@ void MinHeap::SiftDown(int elementNum) { // for MinHeap
 	}
 }
 
+// проталкивание элемента вверх
 void MinHeap::SiftUp(int elementNum) { // for MinHeap
 	while (elementNum > 0) {
 		int parent = (elementNum - 1) / 2;
@@ -112,7 +114,7 @@ void MinHeap::Add(int element) {
 	SiftUp(size_ - 1);
 }
 
-int MinHeap::ExtractMax() {
+int MinHeap::ExtractMin() {
 	// if is not empty
 	int result = buffer_[0];
 	buffer_[0] = buffer_[size_ - 1];
@@ -125,7 +127,7 @@ int MinHeap::ExtractMax() {
 
 
 int main() {
-	int n;
+	int n = 0;
 	std::cin >> n;
 	MinHeap* heap = new MinHeap(n);
 	for (int i = 0; i < n; i++) {
@@ -135,8 +137,8 @@ int main() {
 	}
 	int sum = 0;
 	while(heap->size() > 1) {
-		int element_1 = heap->ExtractMax();
-		int element_2 = heap->ExtractMax();
+		int element_1 = heap->ExtractMin();
+		int element_2 = heap->ExtractMin();
 		int temp_sum = element_1 + element_2;
 		heap->Add(temp_sum);
 		sum += temp_sum;

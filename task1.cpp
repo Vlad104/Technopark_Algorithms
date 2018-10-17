@@ -34,9 +34,10 @@ ID Решения: 12399067
 
 #include <iostream>
 
-long sumsEqualsTo(const int * series_1, const int * series_2, long len1, long len2, long k) {
+long sumsEqualsTo(const int* series_1, const int* series_2, long len1, long len2, long k) {
 	long count = 0;
-	long i = 0, j = len2 - 1;
+	long i = 0; 
+	long j = len2 - 1;
 	long step_counter = 0;
 	
 	// обход массивов, причем, первый оходится слева направо, а второй - справа на лево
@@ -58,13 +59,15 @@ long sumsEqualsTo(const int * series_1, const int * series_2, long len1, long le
 			if (i < len1 - 1) { // перейти на следующий элемент, если текущий не последний
 				i++;				
 			} else if (j > 0) { // перейти на следующий элемент, если текущий не нулевой
-				j--;
+				//j--;
+				break;
 			}
 		} else { // если сумма элементов больше k, то необходимо сумму уменьшить (это возможно только взятием предыдущего элемента из второго массива)
 			if (j > 0) { // перейти на следующий элемент, если текущий не нулевой
 				j--;				
 			} else if (i < len1 - 1) { // перейти на следующий элемент, если текущий не последний
-				i++;
+				//i++;
+				break;
 			}
 		}
 		step_counter++;
@@ -76,27 +79,26 @@ long sumsEqualsTo(const int * series_1, const int * series_2, long len1, long le
 int main() {
 	
 	// заполнение первого массива
-	long len1;
+	long len1 = 0;
 	std::cin >> len1;
-	int * series_1 = new int[len1];
+	int* series_1 = new int[len1];
 	for (long i = 0; i < len1; i++) {
 		std::cin >> series_1[i];
 	}
 
 	// заполнение второго массива
-	long len2;
+	long len2 = 0;
 	std::cin >> len2;
-	int * series_2 = new int[len2];
+	int* series_2 = new int[len2];
 	for (long j = 0; j < len2; j++) {
 		std::cin >> series_2[j];
 	}
 
-	long k;
+	long k = 0;
 	std::cin >> k;
 
 	std::cout << sumsEqualsTo( series_1, series_2, len1, len2, k) << std::endl;
 	delete[] series_1;
 	delete[] series_2;
 	return 0;
-
 }

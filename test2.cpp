@@ -22,13 +22,20 @@
 ID Решения: 12400138
 **/
 
+/**
+Время работы: О(len1 + len2)
+Доп. память:  T(len2) // len2 < len1 (по условию)
+**/
+
 #include <iostream>
 #include <vector>
 
-int * setsUnion(const int * series_1, const int * series_2, int len1, int len2, int * p_len3) {
-
-	int * series_3 = new int[len1]; // пересечение множеств
-	int i = 0, j = 0;
+int* setsUnion(const int* series_1, const int* series_2, int len1, int len2, int* p_len3) {
+ 
+ 	// пересечение множеств, выделяется память размера len2, так как размер перечения множеств не сможет превысить размер меньшего множества (len2 < len1 по условию)
+	int* series_3 = new int[len2];
+	int i = 0;
+	int j = 0;
 	int len3 = *p_len3;
 	int step_counter = 0;
 	
@@ -67,20 +74,21 @@ int * setsUnion(const int * series_1, const int * series_2, int len1, int len2, 
 }
 
 int main() {
-	int len1, len2;
+	int len1 = 0;
+	int len2 = 0;
 	std::cin >> len1 >> len2;
-	int * series_1 = new int[len1];
+	int* series_1 = new int[len1];
 	for (int i = 0; i < len1; i++) {
 		std::cin >> series_1[i];
 	}
 
-	int * series_2 = new int[len2];
+	int* series_2 = new int[len2];
 	for (int j = 0; j < len2; j++) {
 		std::cin >> series_2[j];
 	}	
 
 	int len3 = 0;
-	int * series_3 = setsUnion(series_1, series_2, len1, len2, &len3);
+	int* series_3 = setsUnion(series_1, series_2, len1, len2, &len3);
 	for (int k = 0; k < len3; k++) {
 		std::cout << series_3[k] << " ";
 	}
