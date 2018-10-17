@@ -62,7 +62,7 @@ public:
 	void pushBack(int const number);
 	int popFront();
 	int popBack();
-	long size();
+	long size() const ;
 
 private:
 	void allocateNewMem();
@@ -81,7 +81,7 @@ Deck::Deck(int bufSize = 1) {
 }
 
 // возвращает колличество элементов в буффере
-long Deck::size() {
+long Deck::size()  const {
 	return (tail_ >= head_) ? tail_ - head_ : bufSize_ - head_ + tail_;
 }
 
