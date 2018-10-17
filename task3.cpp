@@ -51,7 +51,7 @@ NO
 
 class Deck {
 public:
-	explicit Deck(int bufSize);
+	Deck(int bufSize);
 	~Deck() {delete[] buf_;};
 	Deck(const Deck&) = delete;
 	Deck(Deck&) = delete;
@@ -73,7 +73,7 @@ private:
 	long tail_;
 };
 
-Deck::Deck(int bufSize) {
+Deck::Deck(int bufSize = 1) {
 	bufSize_ = bufSize;
 	buf_ = new int[bufSize_];
 	head_ = 0;
@@ -87,6 +87,7 @@ long Deck::size() {
 void Deck::allocateNewMem() {
 	int* newBuf = new int[bufSize_*2];
 	assert(newBuf != nullptr);
+	//memcpy(newBuf, buf_, bufSize_);
 	for (long i = 0; i < bufSize_; i++) {
 		newBuf[i] = buf_[head_];
 		head_ = (head_ + 1) % bufSize_;
@@ -99,11 +100,13 @@ void Deck::allocateNewMem() {
 	return;
 }
 
+/*
 void Deck::clearExtraMemory() {
 	if (size() < bufSize_ / 4) {
 		int* newBuf = new int[bufSize_/2];
 		assert(newBuf != nullptr);
 		long newBufSize = size();
+		//memcpy(newBuf, buf_, newBufSize);
 		for (long i = 0; i < newBufSize; i++)	{
 			newBuf[i] = buf_[head_];
 			head_ = (head_ + 1) % bufSize_;
@@ -116,6 +119,7 @@ void Deck::clearExtraMemory() {
 	}	
 	return;
 }
+*/
 
 void Deck::pushFront(int const number) {
 	if ( ( head_ == (tail_ + 1) % bufSize_) ) {
@@ -162,7 +166,7 @@ int Deck::popBack() {
 int main() {
 	long n;
 	std::cin >> n;
-	Deck* deck = new Deck(1);
+	Deck* deck = new Deck();
 	bool isCorrect = true;
 	for (long i = 0; i < n; i++) {
 		int command = 0;

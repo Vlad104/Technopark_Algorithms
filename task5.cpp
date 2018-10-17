@@ -1,4 +1,25 @@
+/*
+Задача 5.4. Закраска прямой в один слой
+На числовой прямой окрасили N отрезков.
+Известны координаты левого и правого концов каждого отрезка [Li, Ri]. Найти сумму длин частей числовой прямой, окрашенных ровно в один слой.
+N ≤ 10000. Li, Ri — целые числа в диапазоне [0, 109].
+
+Формат ввода
+В первой строке записано количество отрезков.
+В каждой последующей строке через пробел записаны координаты левого и правого концов отрезка.
+
+Формат вывода
+Выведите целое число — длину окрашенной в один слой части.
+3
+1 4
+7 8
+2 5
+
+3
+*/
+
 #include <iostream>
+//#include <cassert>
 
 struct Line {
 	int x1;
@@ -14,6 +35,24 @@ void BubbleSort(Line* line, int size) {
 			}
 		}
 	}
+}
+
+void Merge(arr, left, arr + left, right, newArr) {
+}
+
+void MergeSort(int* arr, int size) {
+	if (size <= 1) {
+		return;
+	}
+	int left = size / 2;
+	int right = size - left;
+	MergeSort(arr, left);
+	MergeSort(arr + left, right);
+	int* newArr = new int[size];
+	Merge(arr, left, arr + left, right, newArr);
+	memcpy(arr, newArr, sizeof(int)*size);
+	delete[] newArr;
+	return;
 }
 
 int main() {
