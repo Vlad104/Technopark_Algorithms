@@ -33,27 +33,22 @@ public:
 	MinHeap& operator=(const MinHeap&) = delete;
 	MinHeap& operator=(MinHeap&) = delete;
 
-	//void Add(const int& element);
 	void Add(int element);
 	int ExtractMin();
-	const int& GetMax() const;
 	void BuildHeap();
 	bool isEmpty() {return size_ <= 0;}
 	int  size() {return size_;}
 
-	
-
 private:
-	void SiftDown(int elementNum);
-	void SiftUp(int elementNum);
-	void AllocateNewMem();
 	int* buffer_;
 	int bufferSize_;
 	int size_;
-
+	void SiftDown(int elementNum);
+	void SiftUp(int elementNum);
+	void AllocateNewMem();
 };
 
-MinHeap::MinHeap(int bufferSize) {
+MinHeap::MinHeap(int bufferSize = 1) {
 	size_ = 0;
 	bufferSize_ = bufferSize;
 	buffer_ = new int[bufferSize];
@@ -105,6 +100,7 @@ void MinHeap::SiftUp(int elementNum) { // for MinHeap
 	}
 }
 
+// добавление элемента в кучу, и восстановление её свойства
 void MinHeap::Add(int element) {
 	if (bufferSize_ <= size_) {
 		AllocateNewMem();
@@ -114,6 +110,7 @@ void MinHeap::Add(int element) {
 	SiftUp(size_ - 1);
 }
 
+// извлечение элемента из кучи, и восстановление её свойства
 int MinHeap::ExtractMin() {
 	// if is not empty
 	int result = buffer_[0];
@@ -124,7 +121,6 @@ int MinHeap::ExtractMin() {
 	}
 	return result;
 }
-
 
 int main() {
 	int n = 0;
