@@ -24,6 +24,9 @@ N ≤ 10000. Li, Ri — целые числа в диапазоне [0, 109].
 struct Line {
 	int x1;
 	int x2;
+	bool operator<(Line other) {
+		return ( (x1 < other.x1) || ( x1 == other.x1 && x2 < other.x2) );
+	}
 	//Line(int _x1, int _x2) : x1(_x1), x2(_x2) {}
 };
 
@@ -37,7 +40,8 @@ void BubbleSort(Line* line, int size) {
 	}
 }
 
-void Merge(int* arr_left, int left_size, int* arr_right, int right_size, int* merged_arr) {
+template <typename T>
+void Merge(T arr_left[], int left_size, T arr_right[], int right_size, T merged_arr[]) {
 	int left_index = 0;
 	int right_index = 0;
 	while(left_index < left_size && right_index < right_size) {
@@ -61,7 +65,8 @@ void Merge(int* arr_left, int left_size, int* arr_right, int right_size, int* me
 	}
 }
 
-void MergeSort(int* arr, int size) {
+template <typename T>
+void MergeSort(T arr[], int size) {
 	if (size <= 1) {
 		return;
 	}
@@ -70,34 +75,21 @@ void MergeSort(int* arr, int size) {
 	MergeSort(arr, left_size);
 	MergeSort(arr + left_size, right_size);
 
-	int* merged_arr = new int[size];
+	T* merged_arr = new int[size];
 	Merge(arr, left_size, arr + left_size, right_size, merged_arr);
-	memcpy(arr, merged_arr, size*sizeof(int));
+	memcpy(arr, merged_arr, size*sizeof(T));
 	delete[] merged_arr;
 }
 
 int main() {
-	int n;
-	std::cin >> n;
-	int* line = new int[n];
-	for (int i = 0; i < n; i++) {
-		std::cin >> line[i];
-	}
-
-	MergeSort(line, n);
-
-	for (int i = 0; i < n; i++) {
-		std::cout << line[i] << " ";
-	}
-	std::cout << std::endl;
-
-/*
-	int n;
+	int n = 0;
 	std::cin >> n;
 	Line* line = new Line[n];
 	for (int i = 0; i < n; i++) {
 		std::cin >> line[i].x1 >> line[i].x2;
 	}
+
+
 
 	BubbleSort(line, n);
 	int i = 0;
@@ -125,6 +117,5 @@ int main() {
 	}
 	std::cout << k << std::endl;
 	delete[] line;
-*/
 	return 0;
 }
