@@ -125,18 +125,18 @@ int MinHeap::ExtractMin() {
 int main() {
 	int n = 0;
 	std::cin >> n;
-	MinHeap* heap = new MinHeap(n);
+	MinHeap heap(n);
 	for (int i = 0; i < n; i++) {
 		int element;
 		std::cin >> element;
-		heap->Add(element);
+		heap.Add(element);
 	}
 	int sum = 0;
-	while(heap->size() > 1) {
-		int element_1 = heap->ExtractMin();
-		int element_2 = heap->ExtractMin();
+	while(heap.size() > 1) {
+		int element_1 = heap.ExtractMin();
+		int element_2 = heap.ExtractMin();
 		int temp_sum = element_1 + element_2;
-		heap->Add(temp_sum);
+		heap.Add(temp_sum);
 		sum += temp_sum;
 	}
 
