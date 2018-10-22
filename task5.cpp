@@ -37,53 +37,27 @@ void BubbleSort(Line* line, int size) {
 	}
 }
 
-/*
-// Метод слияния массивов
-merge(int32_t left, int32_t middle, int32_t right) {
-    int32_t it_left = 0, it_right = 0;
-
-    // Буфферный массив для хранения первой половины массива
-    auto *buf = new T[middle - left];
-    memcpy(buf, array + left, sizeof(T) * (middle - left));
-
-    // Сливаем буфрный массив и исходный массив с индекса middle
-    //  В исходный массив
-    while (left + it_left < middle && middle + it_right < right) {
-        if (buf[it_left] < array[middle + it_right]) {
-            array[left + it_left + it_right] = buf[it_left];
-            it_left++;
-        } else {
-            array[left + it_left + it_right] = array[middle + it_right];
-            it_right++;
-        }
-    }
-    // Если остались элементы в буферном массиве
-    // Перенсим их в исходный массив
-    for ( ; left + it_left < middle; ++it_left)
-        array[left + it_left + it_right] = buf[it_left];
-
-    delete[] buf;
-}
-*/
-
-void Merge(arr, left, arr + left, right, newArr) {
+void Merge(int* arr_left, int left_size, int* arr_right, int right_size, int* merged_arr) {
 	int left_index = 0;
 	int right_index = 0;
-	int mid = (left + right) / 2;
-	memcpy(newArr, array + left, (mid-left)*sizeof(int));
-	while(left + left_index < mid && mid + right_index < right) {
-		if (arr[left_index] < array[mid + right_index]) {
-			array[left + left_index + right_index] = newArr[left_index];
+	while(left_index < left_size && right_index < right_size) {
+		if (arr_left[left_index] < arr_right[right_index]) {
+			merged_arr[left_index + right_index] = arr_left[left_index];
 			left_index++;
 		}
 		else {
-			arr[left + left_index + right_index] = array[mid + right_index];
+			merged_arr[left_index + right_index] = arr_right[right_index];
 			right_index++;
 		}
 	}
-	while(left + left_index < mid) {
-		arr[left + left_index + right_index] = newArr[left_index];
+	// копирование оставшихся элементов
+	while(left_index < left_size) {
+		merged_arr[left_index + right_index] = arr_left[left_index];
 		left_index++;
+	}
+	while(right_index < right_size) {
+		merged_arr[left_index + right_index] = arr_right[right_index];
+		right_index++;
 	}
 }
 
@@ -91,19 +65,33 @@ void MergeSort(int* arr, int size) {
 	if (size <= 1) {
 		return;
 	}
-	int left = size / 2;
-	int right = size - left;
-	MergeSort(arr, left);
-	MergeSort(arr + left, right);
-	int* newArr = new int[size];
-	Merge(arr, left, arr + left, right, newArr);
-	memcpy(arr, newArr, size*sizeof(int));
-	delete[] newArr;
-	return;
+	int left_size = size / 2;
+	int right_size = size - left_size;
+	MergeSort(arr, left_size);
+	MergeSort(arr + left_size, right_size);
+
+	int* merged_arr = new int[size];
+	Merge(arr, left_size, arr + left_size, right_size, merged_arr);
+	memcpy(arr, merged_arr, size*sizeof(int));
+	delete[] merged_arr;
 }
 
 int main() {
+	int n;
+	std::cin >> n;
+	int* line = new int[n];
+	for (int i = 0; i < n; i++) {
+		std::cin >> line[i];
+	}
 
+	MergeSort(line, n);
+
+	for (int i = 0; i < n; i++) {
+		std::cout << line[i] << " ";
+	}
+	std::cout << std::endl;
+
+/*
 	int n;
 	std::cin >> n;
 	Line* line = new Line[n];
@@ -132,11 +120,11 @@ int main() {
 		}
 	}
 
-	//for (int i = 0; i < n; i++) {
-	//	std::cout << "[" << line[i].x1 << ", " << line[i].x2 << "]" << std::endl; 
-	//}
+	for (int i = 0; i < n; i++) {
+		std::cout << "[" << line[i].x1 << ", " << line[i].x2 << "]" << std::endl; 
+	}
 	std::cout << k << std::endl;
-
 	delete[] line;
+*/
 	return 0;
 }
