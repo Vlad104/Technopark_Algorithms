@@ -37,7 +37,54 @@ void BubbleSort(Line* line, int size) {
 	}
 }
 
+/*
+// Метод слияния массивов
+merge(int32_t left, int32_t middle, int32_t right) {
+    int32_t it_left = 0, it_right = 0;
+
+    // Буфферный массив для хранения первой половины массива
+    auto *buf = new T[middle - left];
+    memcpy(buf, array + left, sizeof(T) * (middle - left));
+
+    // Сливаем буфрный массив и исходный массив с индекса middle
+    //  В исходный массив
+    while (left + it_left < middle && middle + it_right < right) {
+        if (buf[it_left] < array[middle + it_right]) {
+            array[left + it_left + it_right] = buf[it_left];
+            it_left++;
+        } else {
+            array[left + it_left + it_right] = array[middle + it_right];
+            it_right++;
+        }
+    }
+    // Если остались элементы в буферном массиве
+    // Перенсим их в исходный массив
+    for ( ; left + it_left < middle; ++it_left)
+        array[left + it_left + it_right] = buf[it_left];
+
+    delete[] buf;
+}
+*/
+
 void Merge(arr, left, arr + left, right, newArr) {
+	int left_index = 0;
+	int right_index = 0;
+	int mid = (left + right) / 2;
+	memcpy(newArr, array + left, (mid-left)*sizeof(int));
+	while(left + left_index < mid && mid + right_index < right) {
+		if (arr[left_index] < array[mid + right_index]) {
+			array[left + left_index + right_index] = newArr[left_index];
+			left_index++;
+		}
+		else {
+			arr[left + left_index + right_index] = array[mid + right_index];
+			right_index++;
+		}
+	}
+	while(left + left_index < mid) {
+		arr[left + left_index + right_index] = newArr[left_index];
+		left_index++;
+	}
 }
 
 void MergeSort(int* arr, int size) {
@@ -50,7 +97,7 @@ void MergeSort(int* arr, int size) {
 	MergeSort(arr + left, right);
 	int* newArr = new int[size];
 	Merge(arr, left, arr + left, right, newArr);
-	memcpy(arr, newArr, sizeof(int)*size);
+	memcpy(arr, newArr, size*sizeof(int));
 	delete[] newArr;
 	return;
 }
