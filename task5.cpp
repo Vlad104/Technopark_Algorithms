@@ -19,6 +19,7 @@ N ≤ 10000. Li, Ri — целые числа в диапазоне [0, 109].
 */
 
 #include <iostream>
+#include <string.h>
 //#include <cassert>
 
 struct Line {
@@ -75,7 +76,7 @@ void MergeSort(T arr[], int size) {
 	MergeSort(arr, left_size);
 	MergeSort(arr + left_size, right_size);
 
-	T* merged_arr = new int[size];
+	T* merged_arr = new T[size];
 	Merge(arr, left_size, arr + left_size, right_size, merged_arr);
 	memcpy(arr, merged_arr, size*sizeof(T));
 	delete[] merged_arr;
@@ -84,37 +85,52 @@ void MergeSort(T arr[], int size) {
 int main() {
 	int n = 0;
 	std::cin >> n;
+	if (n == 0) {
+		std::cout << 0 << std::endl;
+		return 0;
+	}
 	Line* line = new Line[n];
 	for (int i = 0; i < n; i++) {
 		std::cin >> line[i].x1 >> line[i].x2;
 	}
+	MergeSort(line, n);
 
-
-
-	BubbleSort(line, n);
-	int i = 0;
+	int i = 1;
 	int k = 0;
 	int dot = 0;
 	dot = line[0].x1;
-	while(i < n - 1) {
-		int distance = line[i+1].x1 - dot;
-		int length = line[i].x2 - dot;
-		k += std::min(length, distance);
-		if ( (line[i].x2 < line[i+1].x1) ) {
-			dot = line[i+1].x1;
+	while(i < n) {
+		int distance = line[i].x1 - dot;
+		int length = line[i-1].x2 - dot;
+		if (distance < length) {
+			k += distance;
+			if (line[i-1].x2 <= line[i].x2) {
+				dot = line[i-1].x2;
+				line[i].x1 = dot;
+				i++;
+				while ( ( i < n ) && dot >= line[i].x2 ) {
+					i++;
+				}
+				MergeSort(line, n);		
+			}
+			else {
+				dot = line[i].x1;
+				line[i-1].x1 = dot;
+				MergeSort(line, n);
+			}
 		}
 		else {
-			dot = line[i].x2;
+			k += length;
+			dot = line[i].x1;
+			i++;
 		}
-		i++;
-		if (i == n - 1) {
-			k += line[i].x2 - dot;
-		}
+	//std::cout << "dist = " << distance << " len = " << length << " dot = " << dot << std::endl;
 	}
+	k += line[n-1].x2 - dot;
 
-	for (int i = 0; i < n; i++) {
-		std::cout << "[" << line[i].x1 << ", " << line[i].x2 << "]" << std::endl; 
-	}
+	//for (int i = 0; i < n; i++) {
+	//	std::cout << "[" << line[i].x1 << ", " << line[i].x2 << "]" << std::endl; 
+	//}
 	std::cout << k << std::endl;
 	delete[] line;
 	return 0;
