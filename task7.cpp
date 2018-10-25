@@ -28,12 +28,16 @@ char* CountSort(char* line, int size) {
 void MSD(char** array, int size, int radix = 0) {
     int group_pos = 0;
     while (group_pos < size) { ///??????
+        char* line = new char[size];
+        for (int i = 0; i < size; i++) {
+            line[i] = array[i][radix];
+        }
         array = CountSort(array, size, radix); ///
         int group_size = 0;
         while ( array[0][radix] == array[group_size][radix] ) {
             group_size++;
         }
-        MSD(array, group_size, radix + 1);
+        MSD(line, group_size, radix + 1);
         group_pos++;
     }
 }
