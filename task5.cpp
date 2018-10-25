@@ -20,6 +20,7 @@ N ≤ 10000. Li, Ri — целые числа в диапазоне [0, 109].
 
 #include <iostream>
 #include <string.h>
+#include <cassert>
 
 struct Point {
 	int value;
@@ -70,36 +71,45 @@ void MergeSort(T arr[], int size) {
 	delete[] merged_arr;
 }
 
-int main() {
-	int n = 0;
-	std::cin >> n;
-	if (n == 0) {
-		std::cout << 0 << std::endl;
-		return 0;
-	}
-	int points_num = 2*n;
-	Point* points = new Point[points_num];
-	for (int i = 0; i < points_num; i+=2) {
-		std::cin >> points[i].value >> points[i+1].value;
-		points[i].type = 1;
-		points[i+1].type = -1;
-	}
-
-	MergeSort(points, points_num);
-
+// функция вычисления суммы длин отрезков "закрашенных" в один слой
+int lineSum(const Point* points, const int points_num) {
 	int sum = 0;
-	//int prev_point = points[0].value;
 	int sign = points[0].type;
 
 	for(int i = 1; i < points_num; i++) {
-		if (sign == 1) {
+		if (sign == 1) { // если это второй слой 
 			sum += points[i].value - points[i-1].value;
 		}
-		//prev_point = points[i].value;
 		sign += points[i].type;
 	}
+	return sum;
+}
 
-	std::cout << sum << std::endl;
+Point* readData(int* p_points_num) {
+	int n = 0;
+	std::cin >> n;
+		if (n == 0) {
+			std::cout << 0 << std::endl;
+			return nullptr;
+		}
+	int points_num = 2*n;
+	Point* points = new Point[points_num];
+	// заполняем массив точек
+	for (int i = 0; i < points_num; i+=2) {
+		// записыаем точки одного отрезка
+		std::cin >> points[i].value >> points[i+1].value;
+		points[i].type = 1; // начало отрезка
+		points[i+1].type = -1; // конец отрезка
+	}
+	*p_points_num = points_num;
+	return points;
+} 
+
+int main() {
+	int points_num = 0;	
+	Point* points = readData(&points_num);
+	MergeSort(points, points_num);
+	std::cout << lineSum(points, points_num) << std::endl;
 	delete[] points;
 	return 0;
 }
