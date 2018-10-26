@@ -19,15 +19,22 @@
 Вывод
 1 3 5¶
 
-ID Решения: 12400138
-**/
-
-/**
-Время работы: О(len1 + len2)
-Доп. память:  T(len2) // len2 < len1 (по условию)
 **/
 
 #include <iostream>
+
+int jump(const int* array, int element, int left, int right) {
+	int prev = 0;
+	int i = 0;
+	while (i < right) {
+		if(element >= array[i]) {
+			return prev;
+		}
+		prev = i;
+		i = 1 << i;
+	}
+	return -1;
+}
 
 // Функция бинарного поиска.
 // Аргументы: массив, по которому идет поиск, элемент, и границы поиска
