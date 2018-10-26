@@ -10,6 +10,7 @@ void clearData(char** array, const int array_size) {
         delete[] array[i];
     }
     delete[] array;
+    array = nullptr;
 }
 
 void printData(char** array, const int array_size) {
@@ -36,7 +37,7 @@ void CountSort(char** array, int size, int* temp, int radix) {
         temp[(int)array[i][radix]]--;
     }    
     memcpy(array, result, size*sizeof(char*));
-    //clearData(result, size);
+    delete[] result;
 }
 
 void MSD(char** array, int size, int radix = 0) {
@@ -57,37 +58,9 @@ void MSD(char** array, int size, int radix = 0) {
         }
 
     }
-
     delete[] group;
-
-    /*
-    int group_pos = 0;
-    while (group_pos < size) { ///??????
-        char* array = new char[size];
-        for (int i = 0; i < size; i++) {
-            array[i] = array[i][radix];
-        }
-        array = CountSort(array, size, radix); ///
-        int group_size = 0;
-        while ( array[0][radix] == array[group_size][radix] ) {
-            group_size++;
-        }
-        MSD(array, group_size, radix + 1);
-        group_pos++;
-    }
-    */
 }
 
-/*
-int reallocate(char* buffer, int buff_size) {
-    char* temp = new char[2*buff_size];
-    memcpy(temp, buffer, buff_size*sizeof(char));
-    buff_size *= 2;
-    delete[] buffer;
-    buffer = temp;
-    return buff_size;
-}
-*/
 
 char** readData(int* p_array_size, int* p_array_buf_size) {    
     int array_size = 0;
@@ -101,12 +74,14 @@ char** readData(int* p_array_size, int* p_array_buf_size) {
         line[str.size()] = '\0';
 
         if (array_size >= array_buf_size) {
-            //array_buf_size = reallocate(*array, array_buf_size);
+            char** temp = new char*[2*array_buf_size];
+            memcpy(temp, array, array_buf_size*sizeof(char*));
+            array_buf_size *= 2;
+            delete[] array;
+            array = temp;
         }
         array[array_size] = line;
         array_size++;
-        //array = nullptr;
-        //str = "";
     }
     *p_array_size = array_size;
     *p_array_buf_size = array_buf_size;

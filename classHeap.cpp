@@ -81,6 +81,7 @@ void Heap::Add(int element) {
 		std::cout << "Alloc" << std::endl;
 	}
 	buffer_[size_] = element;
+	std::cout << "Element = " << element << "  size = " << size_ << std::endl;
 	size_++;
 	SiftUp(size_ - 1);
 }
