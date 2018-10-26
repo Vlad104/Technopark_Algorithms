@@ -23,17 +23,18 @@
 
 #include <iostream>
 
-int jump(const int* array, int element, int left, int right) {
-	int prev = 0;
-	int i = 0;
-	while (i < right) {
-		if(element >= array[i]) {
-			return prev;
+void limitsSeach(const int* array, int element, int* p_left, int* p_right) {
+	int prev = *p_left;
+	int i = *p_left;
+	while (i < *p_right) {
+		if(element <= array[i]) {
+			*p_left = prev;
+			*p_right = i + 1;
+			return;
 		}
 		prev = i;
 		i = 1 << i;
 	}
-	return -1;
 }
 
 // Функция бинарного поиска.
@@ -64,13 +65,17 @@ int* setsUnion(const int* series_1, const int* series_2, int len1, int len2, int
 	int* series_3 = new int[len2];
 	int len3 = 0; // размер массива пересечения множеств
 
-	int previousIndex = 0;
+
+	int prev_index = 0;
 	for (int i = 0; i < len2; i++) {
-		int index = binSeach(series_1, series_2[i], previousIndex, len1);
+		int left = prev_index;
+		int right = len1;
+		limitsSeach(series_1, series_2[i], &left, &right); // элемент находится между 2^(i-1) и 2^i
+		int index = binSeach(series_1, series_2[i], left, right);
 		if (index != -1) {
 			series_3[len3] = series_1[index];
 			len3++;
-			previousIndex = index; // смещаем левую границу для поиска
+			prev_index = left;
 		}
 	}
 	*p_len3 = len3;
