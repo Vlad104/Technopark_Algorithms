@@ -1,3 +1,8 @@
+/*
+6_4. Реализуйте стратегию выбора опорного элемента “случайный элемент”. 
+Функцию Partition реализуйте методом прохода двумя итераторами от конца массива к началу.
+*/
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -6,12 +11,13 @@ int Partition(int* array, int left, int right) {
 	if (left == right) {
 		return left;
 	}
+	// выбор случайного разделителя
 	srand(time(NULL));
 	int rand_pivot_index = left + (rand() % (right - left));
 	int pivot = array[rand_pivot_index];
-	std::swap(array[rand_pivot_index], array[left]);
-	// now pivot in left position
+	std::swap(array[rand_pivot_index], array[left]); // пивот в позиции слева
 
+	//проход двумя итераторами от конца массива к началу
 	int i = right + 1;
 	int j = right;
 	while ( j > left ) {
@@ -23,7 +29,6 @@ int Partition(int* array, int left, int right) {
 	}
 	i--;		
 	std::swap(array[i], array[j]);	
-	//std::cout << "i = " << i << std::endl;
 	return i;
 }
 
@@ -46,7 +51,7 @@ int KStatistic(int* array, int size, int k) {
 }
 
 int main(int argc, char const *argv[]) {
-	std::ios_base::sync_with_stdio(false);
+	//std::ios_base::sync_with_stdio(false);
 	int n = 0;
 	int k = 0;
 	std::cin >> n >> k;

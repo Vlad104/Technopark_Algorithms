@@ -23,6 +23,9 @@
 
 #include <iostream>
 
+// Функция поиска интервала нахождения элемента
+// Аргументы: массив, по которому идет поиск, элемент, и границы поиска
+// Изменяет интералы нахождения элемента
 void limitsSeach(const int* array, int element, int* p_left, int* p_right) {
 	int prev = *p_left;
 	int i = *p_left;
@@ -33,7 +36,7 @@ void limitsSeach(const int* array, int element, int* p_left, int* p_right) {
 			return;
 		}
 		prev = i;
-		i = 1 << i;
+		i = 1 << i; // меняем индекс по степеням двойки
 	}
 }
 
