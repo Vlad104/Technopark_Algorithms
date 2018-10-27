@@ -12,7 +12,7 @@ int Partition(int* array, int left, int right) {
 		return left;
 	}
 	// выбор случайного разделителя
-	srand(time(NULL));
+	srand(2);
 	int rand_pivot_index = left + (rand() % (right - left));
 	int pivot = array[rand_pivot_index];
 	std::swap(array[rand_pivot_index], array[left]); // пивот в позиции слева
