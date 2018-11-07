@@ -25,7 +25,7 @@ HashTable::HashTable(size_t size) :
 
 bool HashTable::Add(const std::string& key) {
 	const size_t hash = Hash(key) % table.size();
-	const aotu& list = table[hash];
+	const auto& list = table[hash];
 	return std::find(list.begin(), list.end(), key) != list.end();
 }
 
