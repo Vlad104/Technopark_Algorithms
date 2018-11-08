@@ -15,8 +15,16 @@ public:
 	bool Remove(const std::string& key);
 
  private:
- 	int alpha = 23;
-	std::vector<std::string> table;
+ 	int alpha_ = 23;
+  int nodeCount_ = 0;
+  struct Node : key(""), deleted(false) {
+    std::string key;
+    bool deleted;
+    bool isEmpty() {
+      return key == "";
+    }
+  };
+  std::vector<Node> table;
 	int Hash(const std::string& key);
 };
 
@@ -28,55 +36,70 @@ HashTable::HashTable(int size = 8) :
 int HashTable::Hash(const std::string& key) {
 	int hash = 0;
 	for (int i = 0; i < key.size(); i++) {
-		hash = (hash * alpha + key[i]) % table.size();
+		hash = (hash * alpha_ + key[i]) % table.size();
 	}
-
+  return hash;
 }
 
-// not rewrited
-bool HashTable::Has(const std::string& key) const {
-  const int hash = Hash(key) % table.size();
-  const auto& list = table[hash];
-  return std::find(list.begin(), list.end(), key) != list.end();
+bool HashTable::Has(const std::string& key) const { // обдумать
+  int hash = Hash(key);
+  int i = 1;
+  while ( 1 ) {
+    if (table[hash].key == key && !table[hash].deleted ) {
+      return true;
+    }
+    if (table[hash].isEmpty() && !table[hash].deleted ) {
+      return false;
+    }
+    if ( i == table.size() ) {
+      return false;
+    }
+    hash = (hash + i*i) % table.size();
+    i++;
+  }
 }
 
-bool HashTable::Add(const std::string& key) {
+bool HashTable::Add(const std::string& key) { // обдумать
+  // перехеширование, если надо
+
 	int hash = Hash(key);
 	int new_hash = hash;
-	for (int i = 0; i < table.size(); i++) {
-		hash = (hash + i*i) % table.size();
-		// проверка не удален или не пуст тогда 
+  int i = 0;
+	while ( !table[new_hash].empty() || table[new_hash].deleted ) {
+		new_hash = (new_hash + i*i) % table.size();
+    if (table[new_hash].key == key) {
+      return false;
+    }
+    i++;
 		new_hash = hash;
 		if (table[hash] == key) {
 			return false;
 		}
-		// пока не удален или не пуст
 	}
-	table[new_hash] = key;
-	// delete = false
-
-	// перехеширование, если надо
+	table[new_hash].key = key;
+  table[new_hash].deleted = false;
+	nodeCount_++;
 }
 
 
-// not rewrited
-bool HashTable::Remove(const std::string& key) {
-  const int hash = Hash(key) % table.size();
-  auto& list = table[hash];
-  if (list.empty()) return false;
-  if (list.front() == key) {
-    list.pop_front();
-    return true;
-  }
-  // Итерируемся по списку, проверяя следующий элемент за текущим.
-  for (auto it = list.begin(); std::next(it) != list.end(); ++it) {
-    if (*std::next(it) == key) {
-      // Удаляем следующий за текущим.
-      list.erase_after(it);
+bool HashTable::Remove(const std::string& key) { // обдумать
+  int hash = Hash(key);
+  int i = 1;
+  while ( 1 ) {
+    if (table[hash].key == key && !table[hash].deleted ) {
+      table[hash].key = "";
+      table[hash].deleted = true;
       return true;
     }
+    if (table[hash].isEmpty() && !table[hash].deleted ) {
+      return false;
+    }
+    if ( i == table.size() ) {
+      return false;
+    }
+    hash = (hash + i*i) % table.size();
+    i++;
   }
-  return false;
 }
 
 // not rewrited
