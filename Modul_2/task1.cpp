@@ -7,21 +7,22 @@
 class HashTable {
 public:
 	explicit HashTable(int size);
-  ~HashTable();
+  ~HashTable() {};
   HashTable(const HashTable&) = delete;
   //HashTable(HashTable&&) = delete;
   HashTable& operator=(const HashTable&) = delete;
   //HashTable& operator=(&HashTable&&) = delete;
 
-	bool Has(const std::string& key) const;
+	bool Has(const std::string& key);
 	bool Add(const std::string& key);
 	bool Remove(const std::string& key);
 
  private:
- 	int alpha_ = 23;
-  int nodeCount_ = 0;
-  int nodeSize_  = 0;
-  struct Node : key(""), deleted(false) {
+ 	int alpha_;
+  int nodeCount_;
+  int nodeSize_;
+  struct Node {
+    Node() : key(""), deleted(false) {}
     std::string key;
     bool deleted;
     bool isEmpty() {
@@ -33,7 +34,7 @@ public:
 };
 
 
-HashTable::HashTable(int size = 8) : table(size)  {}
+HashTable::HashTable(int size = 8) : table(size), alpha_(23), nodeCount_(0), nodeSize_(size)  {}
 
 int HashTable::Hash(const std::string& key) {
 	int hash = 0;
@@ -43,7 +44,7 @@ int HashTable::Hash(const std::string& key) {
   return hash;
 }
 
-bool HashTable::Has(const std::string& key) const { // обдумать
+bool HashTable::Has(const std::string& key) { // обдумать
   int hash = Hash(key);
   int i = 1;
   while ( 1 ) {
@@ -66,7 +67,7 @@ bool HashTable::Add(const std::string& key) { // обдумать
 
 	int hash = Hash(key);
   int i = 0;
-	while ( !table[hash].empty() || table[hash].deleted ) {
+	while ( !table[hash].isEmpty() || table[hash].deleted ) {
 		hash = (hash + i*i) % table.size();
     if (table[hash].key == key) {
       return false;
@@ -76,6 +77,7 @@ bool HashTable::Add(const std::string& key) { // обдумать
 	table[hash].key = key;
   table[hash].deleted = false;
 	nodeCount_++;
+  return true;
 }
 
 
