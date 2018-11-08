@@ -7,8 +7,11 @@
 class HashTable {
 public:
 	explicit HashTable(int size);
-	HashTable(const HashTable&) = delete;
-	HashTable& operator=(const HashTable&) = delete;
+  ~HashTable();
+  HashTable(const HashTable&) = delete;
+  //HashTable(HashTable&&) = delete;
+  HashTable& operator=(const HashTable&) = delete;
+  //HashTable& operator=(&HashTable&&) = delete;
 
 	bool Has(const std::string& key) const;
 	bool Add(const std::string& key);
@@ -17,6 +20,7 @@ public:
  private:
  	int alpha_ = 23;
   int nodeCount_ = 0;
+  int nodeSize_  = 0;
   struct Node : key(""), deleted(false) {
     std::string key;
     bool deleted;
@@ -29,9 +33,7 @@ public:
 };
 
 
-HashTable::HashTable(int size = 8) :
-    table(size)
-{}
+HashTable::HashTable(int size = 8) : table(size)  {}
 
 int HashTable::Hash(const std::string& key) {
 	int hash = 0;
@@ -63,21 +65,16 @@ bool HashTable::Add(const std::string& key) { // обдумать
   // перехеширование, если надо
 
 	int hash = Hash(key);
-	int new_hash = hash;
   int i = 0;
-	while ( !table[new_hash].empty() || table[new_hash].deleted ) {
-		new_hash = (new_hash + i*i) % table.size();
-    if (table[new_hash].key == key) {
+	while ( !table[hash].empty() || table[hash].deleted ) {
+		hash = (hash + i*i) % table.size();
+    if (table[hash].key == key) {
       return false;
     }
     i++;
-		new_hash = hash;
-		if (table[hash] == key) {
-			return false;
-		}
 	}
-	table[new_hash].key = key;
-  table[new_hash].deleted = false;
+	table[hash].key = key;
+  table[hash].deleted = false;
 	nodeCount_++;
 }
 
@@ -104,7 +101,7 @@ bool HashTable::Remove(const std::string& key) { // обдумать
 
 // not rewrited
 int main() {
-  HashTable strings(80);
+  HashTable strings(8);
   char command = 0;
   std::string key;
   while (std::cin >> command >> key) {
