@@ -7,11 +7,11 @@
 class HashTable {
 public:
 	explicit HashTable(int size);
-  ~HashTable() {};
-  HashTable(const HashTable&) = delete;
-  //HashTable(HashTable&&) = delete;
-  HashTable& operator=(const HashTable&) = delete;
-  //HashTable& operator=(&HashTable&&) = delete;
+	  ~HashTable() {};
+	  HashTable(const HashTable&) = delete;
+	  //HashTable(HashTable&&) = delete;
+	  HashTable& operator=(const HashTable&) = delete;
+	  //HashTable& operator=(&HashTable&&) = delete;
 
 	bool Has(const std::string& key);
 	bool Add(const std::string& key);
@@ -19,86 +19,99 @@ public:
 
  private:
  	int alpha_;
-  int nodeCount_;
-  int nodeSize_;
-  struct Node {
-    Node() : key(""), deleted(false) {}
-    std::string key;
-    bool deleted;
-    bool isEmpty() {
-      return key == "";
-    }
-  };
-  std::vector<Node> table;
+  	int nodeCount_;
+  	int nodeSize_;
+  	int rehashLevel_;
+  	struct Node {
+    	Node() : key(""), deleted(false) {}
+	    std::string key;
+	    bool deleted;
+	    bool isEmpty() {
+	      return key == "";
+	    }
+  	};
+  	std::vector<Node> table;
 	int Hash(const std::string& key);
 };
 
 
-HashTable::HashTable(int size = 8) : table(size), alpha_(23), nodeCount_(0), nodeSize_(size)  {}
+HashTable::HashTable(int size = 8) : table(size), alpha_(23), nodeCount_(0), nodeSize_(size), rehashLevel_(0.75)  {}
 
 int HashTable::Hash(const std::string& key) {
 	int hash = 0;
 	for (int i = 0; i < key.size(); i++) {
 		hash = (hash * alpha_ + key[i]) % table.size();
 	}
-  return hash;
+  	return hash;
 }
 
+void HashTable::Rehash() {
+	std::vector<Node> tempTable(table); // copy
+	table.clear();
+	table.resize(table.size())
+	for (int i = 0; i < table.size(); i++) {
+		if( !table[i].isEmpty() && !table[i].deleted ) {
+			Add(table[i].key);
+		}
+	}
+}
+
+
 bool HashTable::Has(const std::string& key) { // обдумать
-  int hash = Hash(key);
-  int i = 1;
-  while ( 1 ) {
-    if (table[hash].key == key && !table[hash].deleted ) {
-      return true;
-    }
-    if (table[hash].isEmpty() && !table[hash].deleted ) {
-      return false;
-    }
-    if ( i == table.size() ) {
-      return false;
-    }
-    hash = (hash + i*i) % table.size();
-    i++;
-  }
+	int hash = Hash(key);
+  	int i = 1;
+  	while ( 1 ) {
+	    if (table[hash].key == key && !table[hash].deleted ) {
+	      return true;
+	    }
+	    if (table[hash].isEmpty() && !table[hash].deleted ) {
+	      return false;
+	    }
+	    if ( i == table.size() ) {
+	      return false;
+	    }
+	    hash = (hash + i*i) % table.size();
+	    i++;
+  	}
 }
 
 bool HashTable::Add(const std::string& key) { // обдумать
-  // перехеширование, если надо
+  	// перехеширование, если надо
 
 	int hash = Hash(key);
-  int i = 0;
+  	int i = 0;
 	while ( !table[hash].isEmpty() || table[hash].deleted ) {
 		hash = (hash + i*i) % table.size();
-    if (table[hash].key == key) {
-      return false;
-    }
+	    if (table[hash].key == key) {
+	      return false;
+	    }
     i++;
 	}
 	table[hash].key = key;
-  table[hash].deleted = false;
+  	table[hash].deleted = false;
 	nodeCount_++;
-  return true;
+  	return true;
 }
 
 
 bool HashTable::Remove(const std::string& key) { // обдумать
-  int hash = Hash(key);
-  int i = 1;
-  while ( 1 ) {
-    if (table[hash].key == key && !table[hash].deleted ) {
-      table[hash].key = "";
-      table[hash].deleted = true;
-      return true;
-    }
-    if (table[hash].isEmpty() && !table[hash].deleted ) {
-      return false;
-    }
-    if ( i == table.size() ) {
-      return false;
-    }
-    hash = (hash + i*i) % table.size();
-    i++;
-  }
+	int hash = Hash(key);
+	int i = 1;
+	while ( 1 ) {
+		if (table[hash].key == key && !table[hash].deleted ) {
+			table[hash].key = "";
+			table[hash].deleted = true;
+			return true;
+		}
+		if (table[hash].isEmpty() && !table[hash].deleted ) {
+			return false;
+		}
+		if ( i == table.size() ) {
+			return false;
+		}
+		hash = (hash + i*i) % table.size();
+		i++;
+	}
 }
 
 // not rewrited
