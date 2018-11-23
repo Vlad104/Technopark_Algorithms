@@ -31,6 +31,7 @@ public:
     ~Treap();
 
     void add(int key);
+    int depth(Node* node = root_, int depth = 0);
 
 private:
     Node* root_;
@@ -88,8 +89,15 @@ void Treap::add(int key, int value) {
     split(node, key, node->left, node->right);
     new_node->left = node->left;
     new_node-right = node->right;
-    node = new_node; /////////// здесь точно неправлильно
+    node = new_node; /////////// здесь возможно неправильно
 
+}
+
+int Treap::depth(Node* node = root_, int depth = 0) {
+    if (node == nullptr) {
+        return depth;
+    }
+    return std::max(depth(node->left, depth + 1), depth(node->right, depth + 1));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -100,6 +108,7 @@ public:
     ~Tree();
 
     void add(int key);
+    int depth(Node* node = root_, int depth = 0);
 
 private:    
     Node* root_;
@@ -132,44 +141,15 @@ Node* Tree::find(Node* node, int key) {
     }
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-// переписать
-template <typename node_t>
-int depth(node_t *node) {
-    if (node == NULL) return 0;
-
-    std::stack<node_t *> s;
-    std::stack<int> depths;
-
-    int current_depth = 0;
-    int max_depth = 0;
-
-    for (;;) {
-        ++current_depth;
-
-        if (node->left != NULL) {
-            if (node->right != NULL) { s.push(node->right); depths.push(current_depth); }
-            node = node->left;
-        } else if (node->right != NULL) {
-            node = node->right;
-        } else {
-            if (current_depth > max_depth) max_depth = current_depth;
-            if (!s.size()) break;
-
-            node = s.top();
-            s.pop();
-
-            current_depth = depths.top();
-            depths.pop();
-        }
+int Tree::depth(Node* node = root_, int depth = 0) {
+    if (node == nullptr) {
+        return depth;
     }
-
-    return max_depth;
+    return std::max(depth(node->left, depth + 1), depth(node->right, depth + 1));
 }
 
-///////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////
 
 int main() {
     int n = 0;
@@ -179,13 +159,14 @@ int main() {
     Tree tree;
 
     for (int i = 0; i < n; i++) {
-        Node treap_node(key, value); /////////////!!!!!!!!!!!!!!
-        Node tree_node(key);
-        treap.add(treap_node);
-        tree.add(tree_node);
+        int key = 0;
+        int value = 0;
+        std::cin >> key >> value;
+        treap.add(key, value);
+        tree.add(key);
     }
 
-    int depth_difference = std::abs(depth(tree) - depth(treap));
+    int depth_difference = std::abs(tree.depth() - treap.depth());
 
     std::cout << depth_difference << std::endl;
 
