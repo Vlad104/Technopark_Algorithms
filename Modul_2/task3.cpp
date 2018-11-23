@@ -80,32 +80,30 @@ void Treap::add(int key, int value) {
     }
 
     Node* node = root_;
-    Node* prev = root_; 
+    Node* prev = root_;
     while (node != nullptr && value > node->value) {
         prev = node;
         if (key > node->key) {
             node = node->right;
-        } else {
+        }
+        else {
             node = node->left;
         }
     }
-    split(node, key, node->left, node->right);
+    //split(node, key, node->left, node->right);
+    split(node, key, new_node->left, new_node->right);
 
-    if (node == nullptr) {
-        node = new_node;
-    } else if (node == root_) {
+    if (node == root_) {
         root_ = new_node;
-    } else {
-        if (key > node->key) {
+    }
+    else {
+        if (key > prev->key) {
             prev->right = new_node;
-        } else {
+        }
+        else {
             prev->left = new_node;
         }
     }
-
-    //new_node->left = node->left;
-    //new_node->right = node->right;
-    //node = new_node; /////////// здесь возможно неправильно
 
 }
 
@@ -132,17 +130,30 @@ private:
 };
 
 void Tree::add(int key) {
-    Node* node = find(root_, key);
-
-    if (node == nullptr) {
+    if (root_ == nullptr) {
         root_ = new Node(key);
-    } else if (key <= node->key) {
-        node->left = new Node(key);
-    } else {
+        return;
+    }
+
+    Node* node = root_;
+    Node* next = root_;
+
+    while (next != nullptr) {
+        node = next;
+        if (key > node->key) {
+            next = next->right;
+        } else {
+            next = next->left;
+        }
+    }
+    if (key > node->key) {
         node->right = new Node(key);
+    } else {
+        node->left = new Node(key);
     }
 }
 
+/*
 Node* Tree::find(Node* node, int key) {
     if (node == nullptr) {
         return nullptr;
@@ -157,6 +168,7 @@ Node* Tree::find(Node* node, int key) {
     }
     return nullptr;
 }
+*/
 
 int Tree::depth(Node* node, int depth_len = 0) {
     if (node == nullptr) {
