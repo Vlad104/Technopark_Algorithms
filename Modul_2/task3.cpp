@@ -21,29 +21,28 @@ struct Node {
         right(nullptr) 
     {}
     ~Node();
-}
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Treap {
 public:
-    Treap();
-    ~Treap();
+    Treap() : root_(nullptr) {};
+    ~Treap() {};
 
-    void add(int key);
-    int depth(Node* node = root_, int depth = 0);
+    void add(int key, int value);
+    int depth(Node* node, int depth);
+    Node* root_;
 
 private:
-    Node* root_;
     void split(Node* node, int key, Node*& left, Node*& right);
     Node* merge(Node* left, Node* right);
 
-}
+};
 
-void Treap::split(Node* node, int key, Node*& left, Node*& right) {
+void Treap::split(Node* node, int key, Node*& left, Node*& right) { 
     if (node == nullptr) {
-        left = nullptr;
-        right = nullptr;
+        return;
     } else if (key > node->key) {
         split(node->right, key, node->right, right);
         left = node;
@@ -53,6 +52,7 @@ void Treap::split(Node* node, int key, Node*& left, Node*& right) {
     }
 }
 
+/*
 Node* Treap::merge(Node* left, Node* right) {
     if (left == nullptr) {
         return right;
@@ -62,13 +62,14 @@ Node* Treap::merge(Node* left, Node* right) {
     }
 
     if (left->value > right->value) {
-        left->right = Merge(left->right, right);
+        left->right = merge(left->right, right);
         return left;
     } else {
-        right->left = Merge(left, right->left);
+        right->left = merge(left, right->left);
         return right;
     }
 }
+*/
 
 void Treap::add(int key, int value) {
 
@@ -78,8 +79,10 @@ void Treap::add(int key, int value) {
         return;
     }
 
-    Node* node = root_; 
-    while (value > node->value) {
+    Node* node = root_;
+    Node* prev = root_; 
+    while (node != nullptr && value > node->value) {
+        prev = node;
         if (key > node->key) {
             node = node->right;
         } else {
@@ -87,33 +90,46 @@ void Treap::add(int key, int value) {
         }
     }
     split(node, key, node->left, node->right);
-    new_node->left = node->left;
-    new_node-right = node->right;
-    node = new_node; /////////// здесь возможно неправильно
+
+    if (node == nullptr) {
+        node = new_node;
+    } else if (node == root_) {
+        root_ = new_node;
+    } else {
+        if (key > node->key) {
+            prev->right = new_node;
+        } else {
+            prev->left = new_node;
+        }
+    }
+
+    //new_node->left = node->left;
+    //new_node->right = node->right;
+    //node = new_node; /////////// здесь возможно неправильно
 
 }
 
-int Treap::depth(Node* node = root_, int depth = 0) {
+int Treap::depth(Node* node, int depth_len = 0) {
     if (node == nullptr) {
-        return depth;
+        return depth_len;
     }
-    return std::max(depth(node->left, depth + 1), depth(node->right, depth + 1));
+    return std::max(depth(node->left, depth_len + 1), depth(node->right, depth_len + 1));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Tree {
 public:
-    Tree();
-    ~Tree();
+    Tree() : root_(nullptr) {};
+    ~Tree() {};
 
     void add(int key);
-    int depth(Node* node = root_, int depth = 0);
+    int depth(Node* node, int depth);
+    Node* root_;
 
 private:    
-    Node* root_;
     Node* find(Node* node, int key);
-}
+};
 
 void Tree::add(int key) {
     Node* node = find(root_, key);
@@ -139,13 +155,14 @@ Node* Tree::find(Node* node, int key) {
     } else {
         find(node->left, key);
     }
+    return nullptr;
 }
 
-int Tree::depth(Node* node = root_, int depth = 0) {
+int Tree::depth(Node* node, int depth_len = 0) {
     if (node == nullptr) {
-        return depth;
+        return depth_len;
     }
-    return std::max(depth(node->left, depth + 1), depth(node->right, depth + 1));
+    return std::max(depth(node->left, depth_len + 1), depth(node->right, depth_len + 1));
 }
 
 
@@ -166,11 +183,14 @@ int main() {
         tree.add(key);
     }
 
-    int depth_difference = std::abs(tree.depth() - treap.depth());
+    std::cout << tree.depth(tree.root_) << " " << treap.depth(treap.root_) << std::endl;
 
+    int depth_difference = std::abs(tree.depth(tree.root_) - treap.depth(treap.root_));
     std::cout << depth_difference << std::endl;
 
     /// деструкторы!!!!!!!!!!!
+
+    //std::cout << tree.depth(tree.root_) << std::endl;
 
     return 0;
 }
