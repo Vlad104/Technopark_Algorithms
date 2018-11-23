@@ -42,7 +42,8 @@ private:
 
 void Treap::split(Node* node, int key, Node*& left, Node*& right) { 
     if (node == nullptr) {
-        return;
+        left = nullptr;
+        right = nullptr;
     } else if (key > node->key) {
         split(node->right, key, node->right, right);
         left = node;
@@ -81,7 +82,7 @@ void Treap::add(int key, int value) {
 
     Node* node = root_;
     Node* prev = root_;
-    while (node != nullptr && value > node->value) {
+    while (node != nullptr && value < node->value) {
         prev = node;
         if (key > node->key) {
             node = node->right;
@@ -195,7 +196,7 @@ int main() {
         tree.add(key);
     }
 
-    std::cout << tree.depth(tree.root_) << " " << treap.depth(treap.root_) << std::endl;
+    //std::cout << tree.depth(tree.root_) << " " << treap.depth(treap.root_) << std::endl;
 
     int depth_difference = std::abs(tree.depth(tree.root_) - treap.depth(treap.root_));
     std::cout << depth_difference << std::endl;
