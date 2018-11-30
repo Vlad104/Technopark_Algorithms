@@ -5,11 +5,11 @@
 class HashTable {
 public:
 	explicit HashTable(int size);
-	  ~HashTable() {};
-	  HashTable(const HashTable&) = delete;
-	  HashTable(HashTable&&) = delete;
-	  HashTable& operator=(const HashTable&) = delete;
-	  HashTable& operator=(HashTable&&) = delete;
+	~HashTable() {};
+	HashTable(const HashTable&) = delete;
+	HashTable(HashTable&&) = delete;
+	HashTable& operator=(const HashTable&) = delete;
+	HashTable& operator=(HashTable&&) = delete;
 
 	bool Has(const std::string& key) const;
 	bool Add(const std::string& key);
@@ -18,12 +18,12 @@ public:
  private:
  	int alpha_;
   	int nodeCount_;
-  	int rehashLevel_;
+  	double rehashLevel_;
   	struct Node {
     	Node() : key(""), deleted(false) {}
 	    std::string key;
 	    bool deleted;
-	    bool isEmpty() {
+	    bool isEmpty() const {
 	    	return key == "";
 	    }
   	};
@@ -44,8 +44,9 @@ int HashTable::Hash(const std::string& key) {
 }
 
 void HashTable::Rehash() {
-	std::vector<Node> temp_table(std::move(table)); // копируем таблицу во временный вектор
-	table.resize(2 * table.size());
+	int new_size = 2 * table.size();
+	std::vector<Node> temp_table(std::move(table)); // переносим таблицу во временный вектор
+	table.resize(new_size);
 
   	nodeCount_ = 0;
 	for (int i = 0; i < temp_table.size(); i++) {
@@ -69,10 +70,11 @@ bool HashTable::Has(const std::string& key) const {
 	    }
 	    i++;
   	}
+  	return false;
 }
 
 bool HashTable::Add(const std::string& key) {
-  	if (nodeCount_ >= table.size() * 0.75) {
+  	if (nodeCount_ >= table.size() * rehashLevel_) {
   		Rehash();
   	}
 	int next_hash = Hash(key);
