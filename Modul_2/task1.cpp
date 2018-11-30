@@ -11,7 +11,7 @@ public:
 	  HashTable& operator=(const HashTable&) = delete;
 	  HashTable& operator=(HashTable&&) = delete;
 
-	bool Has(const std::string& key);
+	bool Has(const std::string& key) const;
 	bool Add(const std::string& key);
 	bool Remove(const std::string& key);
 
@@ -44,26 +44,23 @@ int HashTable::Hash(const std::string& key) {
 }
 
 void HashTable::Rehash() {
-	std::vector<Node> temp_table(table); // копируем таблицу во временный вектор
+	std::vector<Node> temp_table(std::move(table)); // копируем таблицу во временный вектор
 	table.resize(2 * table.size());
-	for (int i = 0; i < table.size(); i++) { // обнуляем таблицу
-    	Node node;
-    	table[i] = node;
-  	}
+
   	nodeCount_ = 0;
 	for (int i = 0; i < temp_table.size(); i++) {
-		if( !temp_table[i].isEmpty() && !temp_table[i].deleted ) {
+		if (!temp_table[i].isEmpty() && !temp_table[i].deleted) {
 			Add(temp_table[i].key);
 		}
 	}
 }
 
 
-bool HashTable::Has(const std::string& key) {
+bool HashTable::Has(const std::string& key) const {
 	int hash = Hash(key);
   	int i = 0;
-  	while (true) {
-	    hash = (hash + i*i) % table.size();
+  	while (i < table.size()) {
+	    hash = (hash + i) % table.size();
 	    if (table[hash].key == key && !table[hash].deleted) {
 	      return true;
 	    }
@@ -75,19 +72,22 @@ bool HashTable::Has(const std::string& key) {
 }
 
 bool HashTable::Add(const std::string& key) {
-  	if ( nodeCount_ >= table.size() * 0.75) {
+  	if (nodeCount_ >= table.size() * 0.75) {
   		Rehash();
   	}
-
-	int hash = Hash(key);
+	int next_hash = Hash(key);
+  	int hash = next_hash;
   	int i = 0;
-	while (!table[hash].isEmpty() || table[hash].deleted) {
-		hash = (hash + i*i) % table.size();
-	    if (table[hash].key == key) {
+	do {
+		next_hash = (next_hash + i) % table.size();
+		if (!table[hash].isEmpty() || !table[hash].deleted) {			
+			hash = next_hash;
+		}
+	    if (table[next_hash].key == key) {
 	      return false;
 	    }
     	i++;
-	}
+	} while (!table[next_hash].isEmpty() || table[next_hash].deleted);
 	table[hash].key = key;
   	table[hash].deleted = false;
 	nodeCount_++;
@@ -99,7 +99,7 @@ bool HashTable::Remove(const std::string& key) {
 	int hash = Hash(key);
 	int i = 0;
 	while (true) {
-		hash = (hash + i*i) % table.size();
+		hash = (hash + i) % table.size();
 		if (table[hash].key == key && !table[hash].deleted) {
 			table[hash].key = "";
 			table[hash].deleted = true;

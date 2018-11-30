@@ -36,35 +36,11 @@ void BinTree::Add(int key) {
 		node = new Node(key);
 		return;
 	}
-/*
-	Node* new_node = new Node(key);
-    while (true) {
-        if ( key < node->key ) {
-            if (node->left != nullptr) {
-                node = node->left;
-            }
-            else {
-                node->left = new_node;
-                break;
-            }
-        }
-        else {
-            if (node->right != nullptr) {
-                node = node->right;
-            }
-            else {
-                node->right = new_node;
-                break;
-            }
-        }
-    }
-    return;
-*/
 
 	Node* new_node = new Node(key);
 	Node* temp_node = node;
     while (true) {
-        if ( key < temp_node->key ) {
+        if ( key <= temp_node->key ) {
             if (temp_node->left) {
                 temp_node = temp_node->left;
             }
