@@ -1,6 +1,4 @@
 #include <iostream>
-#include <string>
-#include <vector>
 #include <algorithm>
 
 struct Node {
@@ -15,11 +13,11 @@ struct Node {
 		height(1),
 		size(1),
 		left(nullptr),
-		right(nullptr) 
+		right(nullptr)
 	{}
 	~Node() {
-		//delete left;
-		//delete right;
+		delete left;
+		delete right;
 	}
 };
 
@@ -30,8 +28,7 @@ public:
 	AVLTree(AVLTree&&) = delete;
 	AVLTree& operator=(const AVLTree&) = delete;
 	AVLTree& operator=(AVLTree&&) = delete;
-	//~AVLTree() {delete root_;};
-	~AVLTree() {};
+	~AVLTree() {delete root_;};
 
 	void add(const int& key);
 	void remove(const int& key);
@@ -50,7 +47,7 @@ private:
 	Node* find_min(Node* node);
 	Node* internal_add(Node* node, const int& key);
 	Node* internal_remove(Node* node, const int& key);
-	Node* remove_min(Node* node);	
+	Node* remove_min(Node* node);
 
 };
 
@@ -65,7 +62,8 @@ Node* AVLTree::internal_add(Node* node, const int& key) {
 	if (key < node->key) {
 		node->left = internal_add(node->left, key);
 
-	} else {
+	}
+	else {
 		node->right = internal_add(node->right, key);
 	}
 	return balance(node);
@@ -78,29 +76,44 @@ void AVLTree::remove(const int& key) {
 Node* AVLTree::internal_remove(Node* node, const int& key) {
 	if (!node) {
 		return nullptr;
-	} 
-	if (key < node->key) { 
-		node->left = internal_remove(node->left, key);
-	} else if (key > node->key) {
-		node->right = internal_remove(node->right, key);
-	} else {  // key == node->key  /////// обдумать 
-		Node* left = node->left;
-		Node* right = node->right;
-		delete node;
-		if (!right) {
-			return left;
-		}
-		Node* min_node = find_min(node->right);
-		min_node->left = left;
-		min_node->right = remove_min(node);
-		return balance(min_node);
 	}
+	if (key < node->key) {
+		node->left = internal_remove(node->left, key);
+	}
+	else if (key > node->key) {
+		node->right = internal_remove(node->right, key);
+	}
+	else {
+		if (node->left == nullptr || node->right == nullptr) {
+			Node* temp = (node->left != nullptr) ? node->left : node->right;
+			if (temp == nullptr) {
+				temp = node;
+				node = nullptr;
+			}
+			else {
+				//node = temp;
+				*node = *temp;
+			}
+			delete temp;
+		}
+		else {
+			Node* min_node = find_min(node->right);
+			node->key = min_node->key;
+			node->right = internal_remove(node->right, min_node->key);
+		}
+
+	}
+	if (node == nullptr) {
+		return nullptr;
+	}
+
 	return balance(node);
 }
 
 
+
 Node* AVLTree::find_min(Node* node) {
-	if(!node->left) {
+	if (node->left == nullptr) {
 		return node;
 	}
 	return find_min(node->left);
@@ -108,7 +121,7 @@ Node* AVLTree::find_min(Node* node) {
 
 
 Node* AVLTree::remove_min(Node* node) {  // обдумать
-	if(!node->left) {
+	if (!node->left) {
 		return nullptr;
 	}
 	node->left = remove_min(node->left);
@@ -117,35 +130,35 @@ Node* AVLTree::remove_min(Node* node) {  // обдумать
 
 int AVLTree::size(Node* node) const {
 	return node != nullptr ? node->size : 0;
-} 
+}
 
 int AVLTree::height(Node* node) const {
 	return node != nullptr ? node->height : 0;
-} 
+}
 
 void AVLTree::fix_height(Node* node) {
 	node->height = std::max(height(node->left), height(node->right)) + 1;
 }
 
 void AVLTree::fix_size(Node* node) {
-	node->height = size(node->left) + size(node->right) + 1;
+	node->size = size(node->left) + size(node->right) + 1;
 }
 
 Node* AVLTree::balance(Node* node) {
-	//fix_height(node); ?
-	//fix_size(node); ?
+	fix_height(node);
+	fix_size(node);
 
 	int bf = balance_factor(node);
 	if (bf == 2) {
 		if (balance_factor(node->right) < 0) {
 			node->right = rotate_right(node->right);
-		} 
+		}
 		return rotate_left(node);
 	}
 	if (bf == -2) {
 		if (balance_factor(node->left) > 0) {
 			node->left = rotate_left(node->left);
-		} 
+		}
 		return rotate_right(node);
 	}
 	return node;
@@ -180,7 +193,7 @@ Node* AVLTree::rotate_right(Node* node) {
 int AVLTree::kstat(int k) {
 	//Node* result = nullptr;
 	int result = 0;
-
+	int s = size(root_);
 	if (k < size(root_)) {
 		Node* node = root_;
 		int index = size(root_->left);
@@ -189,14 +202,16 @@ int AVLTree::kstat(int k) {
 			if (k > index) {
 				node = node->right;
 				index += size(node->left) + 1;
-			} else {
+			}
+			else {
 				node = node->left;
 				index -= size(node->right) + 1;
 			}
 		}
 		result = node->key;
-	} else {
-		std::cout << "BAD" << std::endl;
+	}
+	else {
+		return 0;
 	}
 
 	return result;
@@ -204,7 +219,7 @@ int AVLTree::kstat(int k) {
 
 
 
-int main(int argc, char const *argv[]) {
+int main() {
 	int N = 0;
 	std::cin >> N;
 	AVLTree tree;
@@ -219,8 +234,9 @@ int main(int argc, char const *argv[]) {
 		else {
 			tree.remove(-A);
 		}
+		std::cout << "Stat" << std::endl;
 		std::cout << tree.kstat(k) << std::endl;
-	
+
 	}
 
 	return 0;
