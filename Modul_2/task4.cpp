@@ -191,14 +191,14 @@ Node* AVLTree::rotate_right(Node* node) {
 }
 
 int AVLTree::kstat(int k) {
-	//Node* result = nullptr;
+
 	int result = 0;
 	int s = size(root_);
 	if (k < size(root_)) {
 		Node* node = root_;
 		int index = size(root_->left);
 
-		while (index != k) {
+		while (k != index) {
 			if (k > index) {
 				node = node->right;
 				index += size(node->left) + 1;
