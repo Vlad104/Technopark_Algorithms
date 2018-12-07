@@ -1,29 +1,29 @@
 //#include <iostream>
-#include "CMatrixGraph.h"
+#include "CMatrixGraph.hpp"
 
-CMatrixGraph::CMatrixGraph(unsigned int verticesNumber) :
-    verticesNumber_(verticesNumber),
-    edges_(verticesNumber_)
+MatrixGraph::MatrixGraph(unsigned int verticesCount) :
+    verticesCount_(verticesCount),
+    edges_(verticesCount_)
 {
     for(std::vector<bool>& edge : edges_) {
-        edge.assign(verticesNumber_, false);
+        edge.assign(verticesCount_, false);
     }
 }
 
 
 
-CMatrixGraph::CMatrixGraph(const IGraph* graph) :
-    verticesNumber_(graph->VerticesCount()),
-    edges_(verticesNumber_)
+MatrixGraph::MatrixGraph(const IGraph* graph) :
+    verticesCount_(graph->VerticesCount()),
+    edges_(verticesCount_)
 {
     for(std::vector<bool>& edge : edges_) {
-        edge.assign(verticesNumber_, false);
+        edge.assign(verticesCount_, false);
     }
 
-    for(int i = 0; i < verticesNumber_; i++) {
+    for(int i = 0; i < verticesCount_; i++) {
         std::vector<int> vertices;
         graph->GetNextVertices(i, vertices);
-        for(int egde : vertices) {
+        for(auto edge : vertices) {
             AddEdge(i, edge);
         }
     }
@@ -31,21 +31,21 @@ CMatrixGraph::CMatrixGraph(const IGraph* graph) :
 
 
 
-void CMatrixGraph::AddEdge(int from, int to) {
+void MatrixGraph::AddEdge(int from, int to) {
     edges_[from][to] = true;
 }
 
 
 
-int CMatrixGraph::VerticesCount() const {
-    return verticesNumber_;
+int MatrixGraph::VerticesCount() const {
+    return verticesCount_;
 }
 
 
 
-void CMatrixGraph::GetNextVertices(int vertex, std::vector<int> & vertices) const {
+void MatrixGraph::GetNextVertices(int vertex, std::vector<int> & vertices) const {
     vertices.clear();
-    for(int i = 0; i < verticesNumber_; i++) {
+    for(int i = 0; i < verticesCount_; i++) {
         if(edges_[vertex][i]) {
             vertices.push_back(i);
         }
@@ -54,9 +54,9 @@ void CMatrixGraph::GetNextVertices(int vertex, std::vector<int> & vertices) cons
 
 
 
-void CMatrixGraph::GetPrevVertices(int vertex, std::vector<int> & vertices) const {
+void MatrixGraph::GetPrevVertices(int vertex, std::vector<int> & vertices) const {
     vertices.clear();
-    for(int i = 0; i < verticesNumber_; i++) {
+    for(int i = 0; i < verticesCount_; i++) {
         if(edges_[i][vertex]) {
             vertices.push_back(i);
         }

@@ -1,12 +1,12 @@
 #pragma once
 #include <ostream>
-#include "IGraph.h"
+#include "Graph.hpp"
 
-class CArcGraph : public IGraph{
+class ArcGraph : public IGraph{
 public:
 
-    CArcGraph(unsigned int verticesNumber);
-    CArcGraph(const IGraph * graph);
+    ArcGraph(unsigned int verticesCount);
+    ArcGraph(const IGraph* graph);
 
     void AddEdge(int from, int to) override;
     int VerticesCount() const override;
@@ -22,7 +22,7 @@ private:
         int from;
         int to;
     };
-    unsigned int verticesNumber_;
+    unsigned int verticesCount_;
     std::vector<Edge> edges_;
 
 };

@@ -44,8 +44,8 @@ void ListGraph::AddEdge(int from, int to) {
 		}
 	}
 
-	out_edges_[from].push_back(to);
 	in_edges_[to].push_back(from);
+	out_edges_[from].push_back(to);
 }
 
 void ListGraph::GetNextVertices(int vertex, std::vector<int>& vertices) const {

@@ -1,7 +1,12 @@
 #include <iostream>
 #include "CListGraph.hpp"
+#include "CArcGraph.hpp"
+#include "CSetGraph.hpp"
+#include "CMatrixGraph.hpp"
 
-int main(int argc, char const *argv[]) {
+void list_graph() {
+	std::cout << "ListGraph:" << std::endl;
+
 	ListGraph graph(4);
 	graph.AddEdge(0, 1);
 	graph.AddEdge(0, 2);
@@ -18,7 +23,87 @@ int main(int argc, char const *argv[]) {
 		std::cout << "(" << prev << ", 1), ";
 	}
 	std::cout << std::endl;
+	std::cout << std::endl;
 
 	graph.Print(std::cout);
+}
+
+void arc_graph() {
+	std::cout << "ArcGraph:" << std::endl;
+
+	ArcGraph graph(4);
+	graph.AddEdge(0, 1);
+	graph.AddEdge(0, 2);
+	graph.AddEdge(2, 3);
+	graph.AddEdge(2, 0);
+	graph.AddEdge(1, 3);
+	graph.AddEdge(3, 1);
+
+	std::cout << "Vertices Count = " << graph.VerticesCount() << std::endl; 
+	std::vector<int> prev_vertices;
+	graph.GetPrevVertices(1, prev_vertices);
+	std::cout << "In edges for vertex 1 = ";
+	for (int prev : prev_vertices) {
+		std::cout << "(" << prev << ", 1), ";
+	}
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+	//graph.Print(std::cout);
+}
+
+
+void set_graph() {
+	std::cout << "SetGraph:" << std::endl;
+
+	SetGraph graph(4);
+	graph.AddEdge(0, 1);
+	graph.AddEdge(0, 2);
+	graph.AddEdge(2, 3);
+	graph.AddEdge(2, 0);
+	graph.AddEdge(1, 3);
+	graph.AddEdge(3, 1);
+
+	std::cout << "Vertices Count = " << graph.VerticesCount() << std::endl; 
+	std::vector<int> prev_vertices;
+	graph.GetPrevVertices(1, prev_vertices);
+	std::cout << "In edges for vertex 1 = ";
+	for (int prev : prev_vertices) {
+		std::cout << "(" << prev << ", 1), ";
+	}
+	std::cout << std::endl;
+	std::cout << std::endl;
+	//graph.Print(std::cout);
+}
+
+void matrix_graph() {
+	std::cout << "MatrixGraph:" << std::endl;
+
+	SetGraph graph(4);
+	graph.AddEdge(0, 1);
+	graph.AddEdge(0, 2);
+	graph.AddEdge(2, 3);
+	graph.AddEdge(2, 0);
+	graph.AddEdge(1, 3);
+	graph.AddEdge(3, 1);
+
+	std::cout << "Vertices Count = " << graph.VerticesCount() << std::endl; 
+	std::vector<int> prev_vertices;
+	graph.GetPrevVertices(1, prev_vertices);
+	std::cout << "In edges for vertex 1 = ";
+	for (int prev : prev_vertices) {
+		std::cout << "(" << prev << ", 1), ";
+	}
+	std::cout << std::endl;
+	std::cout << std::endl;
+	//graph.Print(std::cout);
+}
+
+int main(int argc, char const *argv[]) {
+	list_graph();
+	arc_graph();
+	set_graph();
+	matrix_graph();
+
 	return 0;
 }

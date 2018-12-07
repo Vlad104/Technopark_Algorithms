@@ -1,22 +1,22 @@
-#include "CSetGraph.h"
+#include "CSetGraph.hpp"
 
-CSetGraph::CSetGraph(unsigned int verticesNumber):
-    verticesNumber_(verticesNumber),
-    out_(verticesNumber_),
-    in_(verticesNumber_)
+SetGraph::SetGraph(unsigned int verticesCount):
+    verticesCount_(verticesCount),
+    out_(verticesCount_),
+    in_(verticesCount_)
 {}
 
 
 
-CSetGraph::CSetGraph(const IGraph* graph):
-    verticesNumber_(graph->VerticesCount()),
-    out_(verticesNumber_),
-    in_(verticesNumber_)
+SetGraph::SetGraph(const IGraph* graph):
+    verticesCount_(graph->VerticesCount()),
+    out_(verticesCount_),
+    in_(verticesCount_)
 {
-    for(int i = 0; i < verticesNumber_; i++) {
-        vector<int> vertices;
+    for(int i = 0; i < verticesCount_; i++) {
+        std::vector<int> vertices;
         graph->GetNextVertices(i, vertices);
-        for(int edge : vertices) {
+        for(auto edge : vertices) {
             AddEdge(i, edge);
         }
     }
@@ -24,31 +24,31 @@ CSetGraph::CSetGraph(const IGraph* graph):
 
 
 
-void CSetGraph::AddEdge(int from, int to) {
+void SetGraph::AddEdge(int from, int to) {
     out_[from].insert(to);
     in_[to].insert(from);
 }
 
 
 
-int CSetGraph::VerticesCount() const {
-    return verticesNumber_;
+int SetGraph::VerticesCount() const {
+    return verticesCount_;
 }
 
 
 
-void CSetGraph::GetNextVertices(int vertex, vector<int>& vertices) const {
+void SetGraph::GetNextVertices(int vertex, std::vector<int>& vertices) const {
     vertices.clear();
-    for(int i : out_[vertex]) {
+    for(auto i : out_[vertex]) {
         vertices.push_back(i);
     }
 }
 
 
 
-void CSetGraph::GetPrevVertices(int vertex, vector<int>& vertices) const {
+void SetGraph::GetPrevVertices(int vertex, std::vector<int>& vertices) const {
     vertices.clear();
-    for(int i : in_[vertex]) {
+    for(auto i : in_[vertex]) {
         vertices.push_back(i);
     }
 }

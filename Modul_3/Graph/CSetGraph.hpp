@@ -1,19 +1,19 @@
 #include <unordered_set>
-#include "IGraph.h"
+#include "Graph.hpp"
 
 
-class CSetGraph : public IGraph{
+class SetGraph : public IGraph{
 public:
 
-    CSetGraph(unsigned int verticesNumber);
-    CSetGraph(const IGraph* graph);
+    SetGraph(unsigned int verticesCount);
+    SetGraph(const IGraph* graph);
 
     void AddEdge(int from, int to) override;
     int VerticesCount() const override;
     void GetNextVertices(int vertex, std::vector<int>& vertices) const override;
     void GetPrevVertices(int vertex, std::vector<int>& vertices) const override;
 private:
-    unsigned int verticesNumber_;
+    unsigned int verticesCount_;
     std::vector<std::unordered_set<int>> out_;
     std::vector<std::unordered_set<int>> in_;
 };

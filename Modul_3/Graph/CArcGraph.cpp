@@ -1,18 +1,18 @@
-#include "CArcGraph.h"
+#include "CArcGraph.hpp"
 
-CArcGraph::CArcGraph(unsigned int verticesNumber):
-    verticesNumber_(verticesNumber)
+ArcGraph::ArcGraph(unsigned int verticesCount):
+    verticesCount_(verticesCount)
 {}
 
 
 
-CArcGraph::CArcGraph(const IGraph* graph):
-    verticesNumber_(graph->VerticesCount())
+ArcGraph::ArcGraph(const IGraph* graph):
+    verticesCount_(graph->VerticesCount())
 {
-    for(int i = 0; i < verticesNumber_; i++) {
-        vector<int> vertices;
+    for(int i = 0; i < verticesCount_; i++) {
+        std::vector<int> vertices;
         graph->GetNextVertices(i, vertices);
-        for(int edge : vertices) {
+        for(auto edge : vertices) {
             AddEdge(i, edge);
         }
     }
@@ -20,10 +20,10 @@ CArcGraph::CArcGraph(const IGraph* graph):
 
 
 
-void CArcGraph::AddEdge(int from, int to){
+void ArcGraph::AddEdge(int from, int to) {
     // провека на наличие ребра в графе
-    for(const Edge& i : edges_) {
-        if(i.from == from && i.to == to) {
+    for(const auto& edge : edges_) {
+        if(edge.from == from && edge.to == to) {
             return;
         }
     }
@@ -34,26 +34,26 @@ void CArcGraph::AddEdge(int from, int to){
 
 
 
-int CArcGraph::VerticesCount() const{
-    return verticesNumber_;
+int ArcGraph::VerticesCount() const {
+    return verticesCount_;
 }
 
 
 
-void CArcGraph::GetNextVertices(int vertex, vector<int>& vertices) const{
-    for(const Edge& i : edges_) {
-        if(i.from == vertex) {
-            vertices.push_back(i.to);
+void ArcGraph::GetNextVertices(int vertex, std::vector<int>& vertices) const {
+    for(const auto& edge : edges_) {
+        if(edge.from == vertex) {
+            vertices.push_back(edge.to);
         }
     }
 }
 
 
 
-void CArcGraph::GetPrevVertices(int vertex, vector<int>& vertices) const{
-    for(const Edge& i : edges_) {
-        if(i.to == vertex) {
-            vertices.push_back(i.from);
+void ArcGraph::GetPrevVertices(int vertex, std::vector<int>& vertices) const {
+    for(const auto& edge : edges_) {
+        if(edge.to == vertex) {
+            vertices.push_back(edge.from);
         }
     }
 }

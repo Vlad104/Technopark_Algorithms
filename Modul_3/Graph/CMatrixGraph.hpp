@@ -1,9 +1,9 @@
-#include "IGraph.h"
+#include "Graph.hpp"
 
-class CMatrixGraph : public IGraph{
+class MatrixGraph : public IGraph{
 public:
-    CMatrixGraph(unsigned int verticesNumber);
-    CMatrixGraph(const IGraph* graph);
+    MatrixGraph(unsigned int verticesCount);
+    MatrixGraph(const IGraph* graph);
 
     void AddEdge(int from, int to) override;
     int VerticesCount() const override;
@@ -11,7 +11,7 @@ public:
     void GetPrevVertices(int vertex, std::vector<int>& vertices) const override;
 
 private:
-    unsigned int verticesNumber_;
+    unsigned int verticesCount_;
     std::vector<std::vector<bool>> edges_;
 
 };
