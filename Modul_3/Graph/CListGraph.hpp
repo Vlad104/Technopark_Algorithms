@@ -17,5 +17,5 @@ public:
 private:
 	std::vector<std::vector<int>> in_edges_;
 	std::vector<std::vector<int>> out_edges_;
-	int vertices_count_;
+	//int vertices_count_;
 };

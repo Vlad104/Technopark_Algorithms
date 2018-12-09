@@ -9,13 +9,7 @@ ArcGraph::ArcGraph(unsigned int verticesCount):
 ArcGraph::ArcGraph(const IGraph* graph):
     verticesCount_(graph->VerticesCount())
 {
-    for(int i = 0; i < verticesCount_; i++) {
-        std::vector<int> vertices;
-        graph->GetNextVertices(i, vertices);
-        for(auto edge : vertices) {
-            AddEdge(i, edge);
-        }
-    }
+    CopyGraph(graph);
 }
 
 
@@ -55,5 +49,23 @@ void ArcGraph::GetPrevVertices(int vertex, std::vector<int>& vertices) const {
         if(edge.to == vertex) {
             vertices.push_back(edge.from);
         }
+    }
+}
+
+void ArcGraph::Print(std::ostream& out) {
+    out << "out_edges: " << std::endl;
+    int prev_from = -1;
+    for (int i = 0; i < edges_.size(); i++) {
+        if (edges_[i].from == prev_from) {
+            continue;
+        }
+        out << edges_[i].from << ": ";
+        for (int j = 0; j < edges_.size(); j++) {
+            if (edges_[i].from == edges_[j].from) {
+                out << edges_[j].to << " ";
+            }
+        }
+        prev_from = edges_[i].from;
+        out << std::endl;
     }
 }

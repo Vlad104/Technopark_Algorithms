@@ -11,13 +11,7 @@ ListGraph::ListGraph(const IGraph* graph) :
 	in_edges_(graph->VerticesCount()),
 	out_edges_(graph->VerticesCount())
 {
-	for (int i = 0; i < graph->VerticesCount(); i++) {
-		std::vector<int> vertices;
-		graph->GetNextVertices(i, vertices);
-		for (auto edge : vertices) {
-			AddEdge(i, edge);
-		}
-	}
+	CopyGraph(graph);
 }
 
 int ListGraph::VerticesCount() const { 
@@ -29,18 +23,14 @@ void ListGraph::AddEdge(int from, int to) {
 	assert(to >= 0 && to < VerticesCount());
 
 	// проверка наличия ребра в графе
-	if (in_edges_.size() < out_edges_.size()) {
-		for (auto edge : in_edges_[to]) {
-			if (edge == from) {
-				return;
-			}
+	for (auto edge : in_edges_[to]) {
+		if (edge == from) {
+			return;
 		}
 	}
-	else {
-		for (auto edge : out_edges_[to]) {
-			if (edge == to) {
-				return;
-			}
+	for (auto edge : out_edges_[to]) {
+		if (edge == to) {
+			return;
 		}
 	}
 
@@ -62,7 +52,7 @@ void ListGraph::Print(std::ostream& out) {
 	out << "out_edges: " << std::endl;
 	for (int i = 0; i < out_edges_.size(); i++) {
 		out << i << ": ";
-		for (int out_target : out_edges_[i]) {
+		for (auto out_target : out_edges_[i]) {
 			out << out_target << " ";
 		}
 		out << std::endl;

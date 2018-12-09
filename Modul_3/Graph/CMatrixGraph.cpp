@@ -1,4 +1,3 @@
-//#include <iostream>
 #include "CMatrixGraph.hpp"
 
 MatrixGraph::MatrixGraph(unsigned int verticesCount) :
@@ -17,16 +16,10 @@ MatrixGraph::MatrixGraph(const IGraph* graph) :
     edges_(verticesCount_)
 {
     for(std::vector<bool>& edge : edges_) {
+        //edge = std::vector<bool>(verticesCount_, false);
         edge.assign(verticesCount_, false);
     }
-
-    for(int i = 0; i < verticesCount_; i++) {
-        std::vector<int> vertices;
-        graph->GetNextVertices(i, vertices);
-        for(auto edge : vertices) {
-            AddEdge(i, edge);
-        }
-    }
+    CopyGraph(graph);
 }
 
 
@@ -43,7 +36,7 @@ int MatrixGraph::VerticesCount() const {
 
 
 
-void MatrixGraph::GetNextVertices(int vertex, std::vector<int> & vertices) const {
+void MatrixGraph::GetNextVertices(int vertex, std::vector<int>& vertices) const {
     vertices.clear();
     for(int i = 0; i < verticesCount_; i++) {
         if(edges_[vertex][i]) {
@@ -54,11 +47,24 @@ void MatrixGraph::GetNextVertices(int vertex, std::vector<int> & vertices) const
 
 
 
-void MatrixGraph::GetPrevVertices(int vertex, std::vector<int> & vertices) const {
+void MatrixGraph::GetPrevVertices(int vertex, std::vector<int>& vertices) const {
     vertices.clear();
     for(int i = 0; i < verticesCount_; i++) {
         if(edges_[i][vertex]) {
             vertices.push_back(i);
         }
+    }
+}
+
+void MatrixGraph::Print(std::ostream& out) {
+    out << "out_edges: " << std::endl;
+    for (int i = 0; i < edges_.size(); i++) {
+        out << i << ": ";
+        for (auto out_target : edges_[i]) {
+            if (out_target) {
+                out << out_target << " ";
+            }
+        }
+        out << std::endl;
     }
 }

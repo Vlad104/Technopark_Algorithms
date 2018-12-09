@@ -12,6 +12,7 @@ public:
     int VerticesCount() const override;
     void GetNextVertices(int vertex, std::vector<int>& vertices) const override;
     void GetPrevVertices(int vertex, std::vector<int>& vertices) const override;
+    void Print(std::ostream& out);  
 private:
 
     struct Edge{

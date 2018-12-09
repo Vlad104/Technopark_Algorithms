@@ -23,9 +23,8 @@ void list_graph() {
 		std::cout << "(" << prev << ", 1), ";
 	}
 	std::cout << std::endl;
-	std::cout << std::endl;
-
 	graph.Print(std::cout);
+	std::cout << std::endl;
 }
 
 void arc_graph() {
@@ -47,9 +46,8 @@ void arc_graph() {
 		std::cout << "(" << prev << ", 1), ";
 	}
 	std::cout << std::endl;
+	graph.Print(std::cout);
 	std::cout << std::endl;
-
-	//graph.Print(std::cout);
 }
 
 
@@ -72,8 +70,8 @@ void set_graph() {
 		std::cout << "(" << prev << ", 1), ";
 	}
 	std::cout << std::endl;
+	graph.Print(std::cout);
 	std::cout << std::endl;
-	//graph.Print(std::cout);
 }
 
 void matrix_graph() {
@@ -95,8 +93,8 @@ void matrix_graph() {
 		std::cout << "(" << prev << ", 1), ";
 	}
 	std::cout << std::endl;
+	graph.Print(std::cout);
 	std::cout << std::endl;
-	//graph.Print(std::cout);
 }
 
 int main(int argc, char const *argv[]) {
