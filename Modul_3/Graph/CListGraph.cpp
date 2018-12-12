@@ -28,7 +28,7 @@ void ListGraph::AddEdge(int from, int to) {
 			return;
 		}
 	}
-	for (auto edge : out_edges_[to]) {
+	for (auto edge : out_edges_[from]) {
 		if (edge == to) {
 			return;
 		}
