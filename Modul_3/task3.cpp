@@ -82,6 +82,15 @@ int Dijkstra(const ArcGraph& graph, int from, int to) {
 		graph.GetNextVertices(vertex.value, vertices);
 		
 		for (ArcGraph::Vertice v : vertices) {
+			int temp = min_paths[vertex.value] + v.path;
+			if (temp < min_paths[v.value]) {
+				q.erase(ArcGraph::Vertice(v.value, min_paths[v.value]));
+				min_paths[v.value] = temp;
+				q.emplace(ArcGraph::Vertice(v.value, min_paths[v.value]));
+			}
+		}
+		/*		
+		for (ArcGraph::Vertice v : vertices) {
 			if (min_paths[v.value] == inf) {
 				min_paths[v.value] = min_paths[vertex.value] + v.path;
 				q.emplace(ArcGraph::Vertice(v.value, min_paths[v.value]));
@@ -93,6 +102,7 @@ int Dijkstra(const ArcGraph& graph, int from, int to) {
 				q.emplace(ArcGraph::Vertice(v.value, min_paths[v.value]));
 			}
 		}
+		*/
 		/*
 		for (ArcGraph::Vertice v : vertices) {
 			if (min_paths[v.value] > min_paths[vertex.value] + v.path) {
