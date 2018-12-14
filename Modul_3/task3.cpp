@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include <queue>
+#include <unordered_map>
 #include <limits>
 
 const int inf = std::numeric_limits<int>::max();
@@ -64,56 +66,43 @@ void ArcGraph::GetNextVertices(int vertex, std::vector<Vertice>& vertices) const
 
 int Dijkstra(const ArcGraph& graph, int from, int to) {
 
-	std::vector<bool> visited(graph.VerticesCount(), false);
-	std::vector<int> min_paths(graph.VerticesCount(), inf); // путь до i-ой вершины
-	std::vector<int> pi(graph.VerticesCount(), -1); // путь до i-ой вершины
-	min_paths[from] = 0;
+	std::unordered_map<int, int> min_paths(graph.VerticesCount()); // путь до i-ой вершины
+	std::unordered_map<int, bool> visited(graph.VerticesCount()); // путь до i-ой вершины
 
-	std::set<ArcGraph::Vertice> q;
+	min_paths[from] = 0;
+	visited[from] = true;
+
+	std::multiset<ArcGraph::Vertice> q;
 	q.emplace(ArcGraph::Vertice(from, 0));
 
 	while(!q.empty()) {
 		auto vertex = *q.begin();
 		q.erase(q.begin());
-		//q.erase(vertex);
-		visited[vertex.value] = true;
+		
+		if (min_paths.find(vertex.value) == min_paths.end()) {
+			min_paths[vertex.value] = inf;
+		}
 
 		std::vector<ArcGraph::Vertice> vertices;
 		graph.GetNextVertices(vertex.value, vertices);
 		
 		for (ArcGraph::Vertice v : vertices) {
-			int temp = min_paths[vertex.value] + v.path;
-			if (temp < min_paths[v.value]) {
-				q.erase(ArcGraph::Vertice(v.value, min_paths[v.value]));
-				min_paths[v.value] = temp;
-				q.emplace(ArcGraph::Vertice(v.value, min_paths[v.value]));
+			if (min_paths.find(v.value) == min_paths.end()) {
+				min_paths[v.value] = inf;
+				visited[from] = false;
 			}
-		}
-		/*		
-		for (ArcGraph::Vertice v : vertices) {
-			if (min_paths[v.value] == inf) {
-				min_paths[v.value] = min_paths[vertex.value] + v.path;
-				q.emplace(ArcGraph::Vertice(v.value, min_paths[v.value]));
-			}
-			else if (min_paths[v.value] > min_paths[vertex.value] + v.path) {
-				q.erase(ArcGraph::Vertice(v.value, min_paths[v.value]));
-				min_paths[v.value] = min_paths[vertex.value] + v.path;
-				pi[v.value] = vertex.value;
-				q.emplace(ArcGraph::Vertice(v.value, min_paths[v.value]));
-			}
-		}
-		*/
-		/*
-		for (ArcGraph::Vertice v : vertices) {
+
 			if (min_paths[v.value] > min_paths[vertex.value] + v.path) {
-				if (min_paths[v.value] != inf) {
+				if (min_paths[v.value] != inf) {					
 					q.erase(ArcGraph::Vertice(v.value, min_paths[v.value]));
-				}				
-				min_paths[v.value] = min_paths[vertex.value] + v.path;
-				q.emplace(ArcGraph::Vertice(v.value, min_paths[v.value]));
+				}
+					min_paths[v.value] = min_paths[vertex.value] + v.path;
+				if (!visited[v.value]) {
+					visited[v.value] = true;
+					q.emplace(ArcGraph::Vertice(v.value, min_paths[v.value]));
+				}
 			}
 		}
-		*/
 	}
 	if (min_paths[to] == inf) {
 		return -1;

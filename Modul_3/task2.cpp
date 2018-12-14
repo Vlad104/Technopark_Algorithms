@@ -58,7 +58,7 @@ void Graph::Bfs(int from, std::vector<Vertex>& visited) {
 	std::queue<int> q;
 	q.push(from);
 	visited[from].paths = 1;
-	pi[from].paths = 1;
+	//pi[from].paths = 1;
 
 	while(!q.empty()) {
 		int current = q.front();
@@ -71,8 +71,8 @@ void Graph::Bfs(int from, std::vector<Vertex>& visited) {
 			// если не была посещена, добавляем в очередь
 			if (visited[vertex].paths == 0) {
 				q.push(vertex);
-				visited[vertex].depth = visited[current].depth + 1;
 				visited[vertex].paths = visited[current].paths;
+				visited[vertex].depth = visited[current].depth + 1;
 			}
 			// если была посещена, и имеет такую же глубину, увеличиваем кол-во путей
 			else if (visited[vertex].depth == visited[current].depth + 1) {
