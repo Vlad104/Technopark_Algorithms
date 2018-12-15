@@ -1,12 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <set>
-#include <queue>
-#include <unordered_map>
 #include <limits>
 
-
-const int inf = std::numeric_limits<int>::max();
+const int inf = std::numeric_limits<int>::max()/2;
 
 class ListGraph  {
 public:
@@ -19,11 +16,11 @@ public:
    			value(value),
    			path(path)
    		{} 
-   		bool operator<(const Vertice& other) const {
-   			return path < other.path;
-   		}
    		int value;
    		int path;
+   		bool operator<(const Vertice& other) const {
+   			return ((path < other.path) || (path == other.path && value < other.value));
+   		}
    	};	
 
 	void GetNextVertices(int vertex, std::vector<Vertice>& vertices) const ;
@@ -51,34 +48,23 @@ void ListGraph::GetNextVertices(int vertex, std::vector<Vertice>& vertices) cons
 
 int Dijkstra(const ListGraph& graph, int from, int to) {
 
-	//std::unordered_map<int, int> min_paths(graph.VerticesCount()); // путь до i-ой вершины
 	std::vector<int> min_paths(graph.VerticesCount(), inf);
-
 	min_paths[from] = 0;
 
-	std::multiset<ListGraph::Vertice> q;
+	std::set<ListGraph::Vertice> q;
 	q.emplace(ListGraph::Vertice(from, 0));
 
 	while(!q.empty()) {
 		auto vertex = *q.begin();
 		q.erase(q.begin());
 		
-		//if (min_paths.find(vertex.value) == min_paths.end()) {
-		//	min_paths[vertex.value] = inf;
-		//}
-
 		std::vector<ListGraph::Vertice> vertices;
 		graph.GetNextVertices(vertex.value, vertices);
 		
 		for (ListGraph::Vertice v : vertices) {
-			//if (min_paths.find(v.value) == min_paths.end()) {
-			//	min_paths[v.value] = inf;
-			//}
 
-			if (min_paths[v.value] > min_paths[vertex.value] + v.path) {
-				//if (min_paths[v.value] != inf) {					
-					q.erase(ListGraph::Vertice(v.value, min_paths[v.value]));
-				//}
+			if (min_paths[v.value] > min_paths[vertex.value] + v.path) {			
+				q.erase(ListGraph::Vertice(v.value, min_paths[v.value]));
 				min_paths[v.value] = min_paths[vertex.value] + v.path;
 				q.emplace(ListGraph::Vertice(v.value, min_paths[v.value]));
 			}

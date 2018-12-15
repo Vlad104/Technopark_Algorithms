@@ -58,7 +58,6 @@ void Graph::Bfs(int from, std::vector<Vertex>& visited) {
 	std::queue<int> q;
 	q.push(from);
 	visited[from].paths = 1;
-	//pi[from].paths = 1;
 
 	while(!q.empty()) {
 		int current = q.front();

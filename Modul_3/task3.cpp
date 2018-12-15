@@ -67,7 +67,7 @@ void ArcGraph::GetNextVertices(int vertex, std::vector<Vertice>& vertices) const
 int Dijkstra(const ArcGraph& graph, int from, int to) {
 
 	std::unordered_map<int, int> min_paths(graph.VerticesCount()); // путь до i-ой вершины
-	std::unordered_map<int, bool> visited(graph.VerticesCount()); // путь до i-ой вершины
+	std::unordered_map<int, bool> visited(graph.VerticesCount()); 
 
 	min_paths[from] = 0;
 	visited[from] = true;
